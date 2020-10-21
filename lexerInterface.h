@@ -5,7 +5,7 @@
 #ifndef lexeri
 #define lexeri
 
-#define BUFFER_SIZE 32	//TODO: how to decide this
+#define BUFFER_SIZE 32  //TODO: how to decide this
 #define HASH_TABLE_SIZE 96 //TODO: how to decide this
 
 extern int numOfTr, numOfNtr, numOfKeywords;
@@ -20,7 +20,7 @@ extern int isHashBuilt;
 typedef struct HASHNODE{
     int id;
     char value[30];
-    int tag;
+    int tag;    // 0=keyword, 1=non keyword terminal, 2 = non terminals
     struct HASHNODE * next;
 }hashNode;
 
@@ -37,8 +37,8 @@ typedef struct TOKEN{
 
 
 typedef struct tokens{
-	token *head;
-	int len;
+    token *head;
+    int len;
 }tokenStream;
 
 
