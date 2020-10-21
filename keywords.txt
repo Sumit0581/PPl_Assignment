@@ -1,0 +1,15 @@
+program
+declare
+list
+of
+variables
+array
+size
+values
+jagged
+of
+integer
+real
+boolean
+R1
+// ~aniket , 14
