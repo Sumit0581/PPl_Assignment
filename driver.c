@@ -31,7 +31,7 @@ options.
 		printf("\n\n----------------Welcome to the world of PPL Assignment by Group theta-----\n\n");
 		printf("Enter your option 1, 2, 3, or 4\n"); //TODO: print what they do?
 		scanf("%d", &option);
-		
+
 		if(option==0){
 			printf("Exiting\n");
 			break;	
@@ -39,12 +39,12 @@ options.
 		else if(option==1){
 			lexerPreReq(sourceFileName); //hashTable available globally 
 			printHashTable();
-			
+
 			tokenStream *s = (tokenStream *)malloc(sizeof(tokenStream));
 			s->head= NULL;
 			s->len = 0; //len captures the len of source file as # of lexemes
 			tokeniseSourcecode( sourceFileName, s);
-			
+			printTokenStream(s);
 			continue;
 		}
 		else if(option==2){
