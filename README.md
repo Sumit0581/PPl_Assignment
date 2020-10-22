@@ -18,6 +18,6 @@ https://github.com/aviral1117/Compiler-Construction
 
 ### Cross check these images: 
   (Stored in 'pics')
-1. ----PRINTING GRAMMAR--- (value=id, tag= 0:terminal, 1:non terminal)
-2. ----PRINTING TOKENSTREAM (lineNum, lexeme, tokenName, tag)---
-3. ---- hash table----
+1. Printing grammar (value=id, tag= 0:terminal, 1:non terminal)
+2. Printing tokenStream (lineNum, lexeme, tokenName, tag)---
+3. Printing hashTable
