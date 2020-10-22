@@ -198,25 +198,10 @@ void printError(char lex[],int code,int len,int lno){
             printf("line: %d Lexical Error: Length of Identifier exceeded ---> Expected: Identifier of length <= 20, Got: '%s' of length %d\n", lno,lex,len);
             break;
         case 1:
-            printf("line: %d Lexical Error: Invalid Floating Point Numeral '%s' ---> Missing valid character after '.'\n",lno,lex);
+            printf("line: %d Lexical Error: Invalid Integer or Variable name '%s' \n",lno,lex);
             break;
         case 2:
-            printf("line: %d Lexical Error: Invalid Floating Point Numeral '%s' ---> Missing valid character after '%c', Expected a number between 0-9\n",lno,lex,lex[len-1]);
-            break;
-        case 10:
-            if(strlen(lex)>=2 && lex[0]=='.' && lex[1]>='0' && lex[1]<='9'){
-                printf("line: %d Lexical Error: Invalid Operator Encountered ---> '.' before %c, Add a '0' before '.' if a real number was desired\n",lno,lex[1]);
-            }
-            else{
-        //printf("Here");
-                printf("line: %d Lexical Error: Invalid Operator Encountered ---> '%c'\n",lno,lex[0]);
-            }
-            break;
-        case 11:
             printf("line: %d Lexical Error: Invalid Character Encountered ---> '%s', No matching Tokenization Rule\n",lno,lex);
-            break;
-        case 12:
-            printf("line: %d Lexical Error: Invalid Character Encountered after '!' ---> '%c', Expected: '='\n",lno,lex[0]);
             break;
     }
 }
@@ -321,12 +306,22 @@ token * getToken(char *word){
             strcpy(tk->lexeme,word);
             strcpy(tk->tokenName,"ID");
             tk->tag = 1;
+            if(strlen(word)>20){
+                printError(word,0,strlen(word),lineNum);
+                // exit(EXIT_FAILURE); Exits the code immediately
+            }
         }
-        else if(word[0]=='1'||word[0]=='2'||word[0]=='3'||word[0]=='4'||word[0]=='5'||word[0]=='6'||word[0]=='7'||word[0]=='8'||word[0]=='9'){ //token for valid numbers
+        else if(word[0]=='0'||word[0]=='1'||word[0]=='2'||word[0]=='3'||word[0]=='4'||word[0]=='5'||word[0]=='6'||word[0]=='7'||word[0]=='8'||word[0]=='9'){ //token for valid numbers
             tk->lineNum = 0;
             strcpy(tk->lexeme,word);
             strcpy(tk->tokenName,"NUM");
             tk->tag = 1;
+            for(int i=1;i<strlen(word);i++){
+                if(word[i]<'0'||word[i]>'9'){
+                    printError(word,1,strlen(word),lineNum);
+                    // exit(EXIT_FAILURE);
+                }
+            }
         }
         else{ //token for valid symbols
             tk->lineNum = 0;
@@ -367,8 +362,6 @@ token * getToken(char *word){
                     strcpy(tk->tokenName,"PLUS");
                     break;
                 case '-':
-                    printf("%c \n",word[0]);
-                    fflush(stdout);
                     strcpy(tk->tokenName,"MINUS");
                     break;
                 case '*':
@@ -383,6 +376,9 @@ token * getToken(char *word){
                 case '&':
                     strcpy(tk->tokenName,"ANDOP");
                     break;
+                default:
+                    printError(word,2,strlen(word),lineNum);
+                    // exit(EXIT_FAILURE);
             }
         }
     }
@@ -410,25 +406,22 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
         return;
     }
     char line[400];
-    int i =0;
-    int lineNumber=0;
     const char delimiter[2]= " ";
     while(fgets(line,400,src)!=NULL){
-        lineNumber++;
         char* word;
         word = strtok(line,delimiter);
         while(word != NULL){
             token *tk = getToken(word);
             fflush(stdout);
-            tk->lineNum = lineNumber;
+            tk->lineNum = lineNum;
             tk->next= NULL;
             insertInStream(s,tk);
             word = strtok(NULL,delimiter);
-            i++;
         }
+        lineNum++;
     }
     token *tk = (token *) malloc(sizeof(token));
-    tk->lineNum = (lineNumber+1);
+    tk->lineNum = lineNum;
     strcpy(tk->lexeme,"EOF");
     strcpy(tk->tokenName,"EOF");
     tk->tag =1;
