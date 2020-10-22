@@ -299,21 +299,21 @@ token * getToken(char *word){
     */
     token *tk = (token *) malloc(sizeof(token));
 
-    // search for word == keyword (tag =0)
-    int b = search(word, 0);
+    // search for word == keyword (tag =2)
+    int b = search(word, 2);
     
     if(b!=-1){ // token for valid keywords
         tk->lineNum = 0;
         strcpy(tk->lexeme,word);
         strcpy(tk->tokenName,word);
-        tk->tag = 0;
+        tk->tag = 2;
     }
     else{ 
         if(word[0]=='a'||word[0]=='b'||word[0]=='c'||word[0]=='d'||word[0]=='e'||word[0]=='f'||word[0]=='g'||word[0]=='h'||word[0]=='i'||word[0]=='j'||word[0]=='k'||word[0]=='l'||word[0]=='m'||word[0]=='n'||word[0]=='o'||word[0]=='p'||word[0]=='q'||word[0]=='r'||word[0]=='s'||word[0]=='t'||word[0]=='u'||word[0]=='v'||word[0]=='w'||word[0]=='x'||word[0]=='y'||word[0]=='z'||word[0]=='A'||word[0]=='B'||word[0]=='C'||word[0]=='D'||word[0]=='E'||word[0]=='F'||word[0]=='G'||word[0]=='H'||word[0]=='I'||word[0]=='J'||word[0]=='K'||word[0]=='L'||word[0]=='M'||word[0]=='N'||word[0]=='O'||word[0]=='P'||word[0]=='Q'||word[0]=='R'||word[0]=='S'||word[0]=='T'||word[0]=='U'||word[0]=='V'||word[0]=='W'||word[0]=='X'||word[0]=='Y'||word[0]=='Z'||word[0]=='_'){ //token for valid variable names
             tk->lineNum = 0;
             strcpy(tk->lexeme,word);
             strcpy(tk->tokenName,"ID");
-            tk->tag = 1;
+            tk->tag = 0;
             if(strlen(word)>20){
                 printError(word,0,strlen(word),lineNum);
                 // exit(EXIT_FAILURE); Exits the code immediately
@@ -323,7 +323,7 @@ token * getToken(char *word){
             tk->lineNum = 0;
             strcpy(tk->lexeme,word);
             strcpy(tk->tokenName,"NUM");
-            tk->tag = 1;
+            tk->tag = 0;
             for(int i=1;i<strlen(word);i++){
                 if(word[i]<'0'||word[i]>'9'){
                     printError(word,1,strlen(word),lineNum);
@@ -334,7 +334,7 @@ token * getToken(char *word){
         else{ //token for valid symbols
             tk->lineNum = 0;
             strcpy(tk->lexeme,word);
-            tk->tag = 1;
+            tk->tag = 0;
             switch(word[0]){
                 case ':':
                     strcpy(tk->tokenName,"COLON");
@@ -433,11 +433,10 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     tk->lineNum = lineNum;
     strcpy(tk->lexeme,"EOF");
     strcpy(tk->tokenName,"EOF");
-    tk->tag =1;
+    tk->tag =0;
     tk-> next = NULL;
     insertInStream(s,tk);
     return;
 }
-
 
 
