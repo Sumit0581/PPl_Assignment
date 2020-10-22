@@ -110,7 +110,23 @@ grammar* readGrammar(char *inputfile, grammar* g){
     fclose(fp);
     return g;
 }
-
+printGrammar(grammar* g){
+     for(int i=0;i<grammarRules;i++){
+	printf("RuleNo=%d:,LHSNtr=%d->",i+1,g[i].value);
+	SymbolNode s=g[i].front;
+	while(s!=NULL)
+	{
+	 	if(s.next==NULL){
+			printf("Value=%d tag=%d ",s.value,s.tag);
+		}
+		else{
+			printf("Value=%d tag=%d->",s.value,s.tag);
+		}
+		s=s.next;
+	}
+	printf("\n");
+     }
+}
 
 
 
