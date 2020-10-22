@@ -14,7 +14,7 @@ char *keywordFile = "keywords.txt";
 
 
 // extern variables from lexerInterface
-int numOfTr=19, numOfNtr=30, numOfKeywords=13;
+int numOfTr=32, numOfNtr=30, numOfKeywords=13;	//numOfTr currently include keywords also.
 
 char **terminals;   // can remove everything about these three variables, even though they took a lot time
 char **nonterminals;
@@ -102,7 +102,7 @@ void populateHashTable(){
     for(int i=0; i<numOfTr; i++){
         fscanf(fp, "%s", name); 
         terminals[i] = name;
-        hashInsert(name,i,1); // terminals which are not keyword are to go here (tag =1)
+        hashInsert(name,i,0); // terminals which are not keyword are to go here (tag =0)
     }
     fclose(fp);
     fp = fopen(nonterminalFile, "r");
@@ -111,7 +111,7 @@ void populateHashTable(){
     for(int i=0; i<numOfNtr; i++){
         fscanf(fp, "%s", name); 
         nonterminals[i] = name; 
-        hashInsert(name,i,2); // non terminal tag =2
+        hashInsert(name,i,1); // non terminal tag =1
         
     }
     fclose(fp);
@@ -120,7 +120,7 @@ void populateHashTable(){
     for(int i=0; i<numOfKeywords; i++){
         fscanf(fp, "%s", name); 
         keywords[i] = name;
-        hashInsert(name,i,0);   // keyowrds tag=0
+        hashInsert(name,i,2);   // keyowrds tag=2
         
     }
     fclose(fp); 
@@ -160,7 +160,7 @@ void printHashTable(){
 
         returns: void
     */
-    printf("PRINTING HASH TABLE \n");   
+    printf("\n\n----PRINTING HASH TABLE----\n\n");   
     for(int i=0; i<HASH_TABLE_SIZE; i++){
         if(hashTable[i]==NULL)
             printf("%d: --- \n", i);
@@ -236,7 +236,7 @@ void printToken(token *tk){
 
         returns: void
     */
-    printf("PRINTING A TOKEN: %d %s %s %d\n", tk->lineNum, tk->lexeme, tk->tokenName, tk->tag);
+    printf("%d,%s,%s,%d\t", tk->lineNum, tk->lexeme, tk->tokenName, tk->tag);
     return;
 }
 
@@ -248,9 +248,15 @@ void printTokenStream(tokenStream *s){
 
         returns: void
     */
+    printf("\n\n----PRINTING TOKENSTREAM (lineNum, lexeme, tokenName, tag)---\n\n");
     token *temp = s->head;
+    int i=1;	
     while(temp!=NULL){
-        printToken(temp);
+        if(temp->lineNum > i){
+        	printf("\n");
+        	i = temp->lineNum;
+        }
+        printToken(temp);	
         temp = temp->next;
     }
 }
@@ -264,6 +270,8 @@ void insertInStream(tokenStream *s, token *tk){
 
         returns: void
     */
+    
+    //if(tk==NULL) return;	//this won't happen
     token *temp=s->head;
     if(temp==NULL){
         s->head = tk;
@@ -409,7 +417,8 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     const char delimiter[2]= " ";
     while(fgets(line,400,src)!=NULL){
         char* word;
-        word = strtok(line,delimiter);
+        word = strtok(line,"\n");
+        word = strtok(word,delimiter);
         while(word != NULL){
             token *tk = getToken(word);
             fflush(stdout);

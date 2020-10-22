@@ -3,8 +3,9 @@
 //#include <stdlib.h>
 #include "interface.h"
 
-char *sourceFileName = "sourcecode.txt";
-
+char* sourceFileName = "sourcecode.txt";
+char* grammarFile = "grammar.txt";
+int numOfRules = 57;
 int main(int argc, char* argv[]){
 	
 	/*
@@ -37,14 +38,18 @@ options.
 			break;	
 		}
 		else if(option==1){
-			lexerPreReq(sourceFileName); //hashTable available globally 
+			lexerPreReq(sourceFileName); /* in lexer.c */ //hashTable available globally 
 			printHashTable();
 
 			tokenStream *s = (tokenStream *)malloc(sizeof(tokenStream));
 			s->head= NULL;
 			s->len = 0; //len captures the len of source file as # of lexemes
-			tokeniseSourcecode( sourceFileName, s);
-			printTokenStream(s);
+			tokeniseSourcecode( sourceFileName, s); /* in lexer.c */
+			printTokenStream(s);	
+			
+			grammar* g = (grammar *)malloc(numOfRules* sizeof(grammar));
+			g = readGrammar(grammarFile, g);	/* in grammar.c */
+			printGrammar(g);
 			continue;
 		}
 		else if(option==2){
