@@ -24,5 +24,5 @@ https://github.com/aviral1117/Compiler-Construction
 
 
 ## TODOs later:
-1. Handle \t \n in sourecode [lexer.c]. Ask is A\tB == AB or A<space>B
+1. Handle \t \n in sourecode [lexer.c]. Ask is A\tB == AB or A space B
 2.
