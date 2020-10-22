@@ -1,4 +1,4 @@
-<Program> BO BC CBO <declarationList> <assignmentList> CBC
+<program> BO BC CBO <declarationList> <assignmentList> CBC
 <declarationList> <declarationList> <declaration>  
 <declarationList> <declaration>
 <assignmentList> <assignmentList> <assignment> 
