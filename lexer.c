@@ -14,7 +14,7 @@ char *keywordFile = "keywords.txt";
 
 
 // extern variables from lexerInterface
-int numOfTr=32, numOfNtr=30, numOfKeywords=13;	//numOfTr currently include keywords also.
+int numOfTr=32, numOfNtr=31, numOfKeywords=13;	//numOfTr currently include keywords also.
 
 char **terminals;   // can remove everything about these three variables, even though they took a lot time
 char **nonterminals;
