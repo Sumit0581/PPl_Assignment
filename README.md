@@ -21,3 +21,8 @@ https://github.com/aviral1117/Compiler-Construction
 1. Printing grammar (value=id, tag= 0:terminal, 1:non terminal)
 2. Printing tokenStream (lineNum, lexeme, tokenName, tag)---
 3. Printing hashTable
+
+
+## TODOs later:
+1. Handle \t \n in sourecode [lexer.c]. Ask is A\tB == AB or A<space>B
+2.
