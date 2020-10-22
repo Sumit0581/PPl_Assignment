@@ -28,6 +28,7 @@ sumop
 mulop
 booleanExpression
 andExpression
+arrType
 
 
 
