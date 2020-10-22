@@ -7,7 +7,6 @@ array
 size
 values
 jagged
-of
 integer
 real
 boolean
