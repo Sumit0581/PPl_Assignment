@@ -42,7 +42,7 @@
 <range> NUM
 <singleStaticDimension> SQRBO NUM DOTDOT NUM SQRBC
 <index> <range> <index2>
-<index2> <range> <index>
+<index2> <range> <index2>
 <index2> EPS
 <brackets> SQRBO SQRBC SQRBO SQRBC
 <brackets> SQRBO SQRBC
