@@ -32,7 +32,7 @@
 <varList> ID ID <varList2>
 <varList> ID COMMA ID <varList2>
 <varList2> ID <varList2>
-<varList2> ID COMMA <varList2>
+<varList2> COMMA <varList2>
 <varList2> EPS
 <dimensions> <singleDimension> <dimensions2>
 <dimensions2> <singleDimension> <dimensions2>
