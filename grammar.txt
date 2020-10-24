@@ -34,10 +34,9 @@
 <varList2> ID <varList2>
 <varList2> COMMA <varList2>
 <varList2> EPS
-<dimensions> <singleDimension> <dimensions2>
-<dimensions2> <singleDimension> <dimensions2>
+<dimensions> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
+<dimensions2> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
 <dimensions2> EPS
-<singleDimension> SQRBO <range> DOTDOT <range> SQRBC
 <range> ID
 <range> NUM
 <singleStaticDimension> SQRBO NUM DOTDOT NUM SQRBC
