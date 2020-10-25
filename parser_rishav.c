@@ -67,7 +67,8 @@ treeNode *add_child(treeNode *n,char* data){
 	
 
 
-
+//<varList> ID ID <varList2>
+//<varList> ID COMMA ID <varList2>
 
 token * varList(token *node,int len,treeNode *root){
 	token *prev=node;
@@ -140,7 +141,6 @@ token * varList2(token *node,int len,treeNode *root){
 //<dimensions> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
 //<dimensions2> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
 //<dimensions2> EPS
-//<singleDimension> SQRBO <range> DOTDOT <range> SQRBC
 token * dimensions(token *node,int len,treeNode *root){
 	if(!strcmp(node->tokenName,"SQRBO")){
 		
