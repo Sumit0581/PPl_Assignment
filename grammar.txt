@@ -19,7 +19,7 @@
 <jaggedInitialisationList2> <jaggedInitialisation> <jaggedInitialisationList2>
 <jaggedInitialisationList2> EPS
 <jaggedInitialisation> R1 SQRBO NUM SQRBC COLON size NUM COLON values CBO <numberList> CBC
-<<numberList> <numberList2> <numberList3>
+<numberList> <numberList2> <numberList3>
 <numberList3> SEMICOLON <numberList2> <numberList3>
 <numberList3> EPS
 <numberList2> NUM <numberList4>
