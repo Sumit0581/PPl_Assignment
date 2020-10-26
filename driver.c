@@ -3,7 +3,7 @@
 //#include <stdlib.h>
 #include "interface.h"
 
-char* sourceFileName = "sourcecode.txt";
+char* sourceFileName = "trash2.txt"; //TODO: use "sourcecode.txt"
 char* grammarFile = "grammar.txt";
 int numOfRules = 57;
 int main(int argc, char* argv[]){
@@ -46,10 +46,39 @@ options.
 			s->len = 0; //len captures the len of source file as # of lexemes
 			tokeniseSourcecode( sourceFileName, s); /* in lexer.c */
 			printTokenStream(s);	
-			
+			/*
 			grammar* g = (grammar *)malloc(numOfRules* sizeof(grammar));
-			g = readGrammar(grammarFile, g);	/* in grammar.c */
+			g = readGrammar(grammarFile, g);	// in grammar.c 
 			printGrammar(g);
+			*/
+			token *h = s->head;
+			
+			//for(int i=0; i<(s->len); i++){
+				//fContainer(h, g);
+			//	printToken(h);
+			//	h = h->next;
+			//}
+			token *t = createTokenNtr("Start");
+			treeNode *root = new_node(t,1, 99);
+			
+			//token *result = jaggedInitialisationList(h,root);
+			//token *result = jaggedInitialisationList2(h,root);
+
+			token *result = jaggedDeclaration(h,root);
+			
+			//token *result = program(h, root);
+			
+			if(!strcmp(result->tokenName,"EOF"))
+				printf("\nAccepted..!!!\n");
+			else printf("\nRejected..!!!\n");
+
+			printf("Hello fflush");
+			fflush(stdout);
+			
+			printParseTree(root);
+			
+			
+			
 			continue;
 		}
 		else if(option==2){
@@ -69,6 +98,5 @@ options.
 	
 	return 0;
 }
-
 
 
