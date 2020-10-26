@@ -109,6 +109,253 @@ void printParseTree(treeNode *root){
 	printRecur(root);
 }
 
+//RISHAV's works start rule no-32 to 50
+
+
+token * varList(token *node,treeNode *root){
+	token *prev=node;
+	token *temp,*temp1,*temp2;
+	if(!strcmp(node->tokenName,"ID")){
+		temp=node;
+		node=node->next;
+		if(!strcmp(node->tokenName,"ID")){
+			temp1=node;
+			node=node->next;
+			treeNode *child=add_child(root,createTokenNtr("varList"),1,31);
+			add_child(child,temp,0,31);
+			add_child(child,temp1,0,31);
+			token *move=varList2(node,child);
+			return move;
+		}
+		else if(!strcmp(node->tokenName,"COMMA")){
+			temp1=node;
+			node=node->next;
+			if(!strcmp(node->tokenName,"ID")){
+				temp2=node;
+				node=node->next;
+				treeNode *child=add_child(root,createTokenNtr("varList"),1,32);
+				add_child(child,temp,0,32);
+				add_child(child,temp1,0,32);
+				add_child(child,temp2,0,32);
+				token *move =varList2(node,child);
+				return move;
+			}
+		}
+	}
+	return prev;
+}
+//<varList2> ID <varList2>
+//<varList2> COMMA ID <varList2>
+//<varList2> EPS
+token * varList2(token *node,treeNode *root){
+		token *prev=node;
+		token *temp,*temp1,*temp2;
+	if(!strcmp(node->tokenName,"ID")){
+		temp=node;
+		node=node->next;
+		treeNode *child=add_child(root,createTokenNtr("varList2"),1,33);
+			add_child(child,temp,0,33);
+			//add_child(child,temp1->lexeme);
+			token *move=varList2(node,child);
+			return move;
+		
+		
+	}
+	else if(!strcmp(node->tokenName,"COMMA"))
+		{
+			temp=node;
+			node=node->next;
+		treeNode *child=add_child(root,createTokenNtr("varList2"),1,34);
+			add_child(child,temp,0,34);
+			add_child(child,node,0,34);
+			node=node->next;
+			//add_child(child,temp1->lexeme);
+			token *move=varList2(node,child);
+			return move;
+		}
+	else
+	{
+		treeNode *child=add_child(root,createTokenNtr("varList2"),1,35);
+		add_child(child,createTokenEPS(),0,35);
+		return node;
+	}
+}
+//<dimensions> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
+//<dimensions2> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
+//<dimensions2> EPS
+//<singleDimension> SQRBO <range> DOTDOT <range> SQRBC
+token * dimensions(token *node,treeNode *root){
+	if(!strcmp(node->tokenName,"SQRBO")){
+		
+			treeNode *child=add_child(root,createTokenNtr("dimensions"),1,36);
+			add_child(child,node,0,36);
+			node=node->next;
+			token *move=range(node,child);
+			move=move->next;
+			add_child(child,move,0,36);
+			move=move->next;
+			move=range(move,child);
+			move=move->next;
+			add_child(child,move,0,36);
+			move=move->next;
+			move=dimensions2(move,child);
+			//move=move->next;
+			return move;
+		}
+		else{
+			return node;
+		}
+	}
+token * dimensions2(token *node,treeNode *root){
+			if(!strcmp(node->tokenName,"SQRBO")){
+		
+			treeNode *child=add_child(root,createTokenNtr("dimensions2"),1,37);
+			add_child(child,node,0,37);
+			node=node->next;
+			token *move=range(node,child);
+			move=move->next;
+			add_child(child,move,0,37);
+			move=move->next;
+			move=range(move,child);
+			move=move->next;
+			add_child(child,move,0,37);
+			move=move->next;
+			move=dimensions2(move,child);
+			//move=move->next;
+			return move;
+		}
+		else{
+			
+			treeNode *child=add_child(root,createTokenNtr("dimensions2"),1,38);
+			add_child(child,createTokenEPS(),0,38);
+			return node;
+		}
+			
+}
+token* range(token *node,treeNode *root){
+	if(!strcmp(node->tokenName,"ID")){
+		treeNode *child=add_child(root,createTokenNtr("range"),1,39);
+			add_child(child,node,0,39);
+			return node;
+	}
+	if(!strcmp(node->tokenName,"NUM")){
+		treeNode *child=add_child(root,createTokenNtr("range"),1,40);
+			add_child(child,node,0,40);
+			return node;
+	}
+}
+//<singleStaticDimension> SQRBO NUM DOTDOT NUM SQRBC
+token * singleStaticDimension(token *node,treeNode *root){
+	if(!strcmp(node->tokenName,"SQRBO")){
+		
+			treeNode *child=add_child(root,createTokenNtr("singleStaticDimension"),1,41);
+			add_child(child,node,0,41);
+			node=node->next;
+			add_child(child,node,0,41);
+			node=node->next;
+			add_child(child,node,0,41);
+			node=node->next;
+			add_child(child,node,0,41);
+			node=node->next;
+			add_child(child,node,0,41);
+			node=node->next;
+			return node;
+		}
+		else{
+	
+			return node;
+		}
+}
+//<index> <range> <index2>
+//<index2> <range> <index2>
+//<index2> EPS
+token * index(token *node,treeNode *root){
+		treeNode *child=add_child(root,createTokenNtr("index"),1,42);
+			token *move=range(node,child);
+			move=move->next;
+			move=index2(node,child);
+			return move;
+}
+token * index2(token *node,treeNode *root){
+		
+			if(!strcmp(node->tokenName,"ID") || !strcmp(node->tokenName,"NUM")){
+			treeNode *child=add_child(root,createTokenNtr("index2"),1,43);
+			token *move=range(node,child);
+			move=move->next;
+			move=range(node,child);
+			return move;
+			}
+			else{
+				treeNode *child=add_child(root,createTokenNtr("index2"),1,44);
+					add_child(child,createTokenEPS(),0,44);
+					return node;
+					
+			}
+}
+//<brackets> SQRBO SQRBC SQRBO SQRBC
+//<brackets> SQRBO SQRBC
+token * brackets(token *node,treeNode *root){
+	token *temp=node;
+	temp=temp->next->next;
+	if(!strcmp(temp->tokenName,"SQRBO"))
+	{
+		treeNode *child=add_child(root,createTokenNtr("brackets"),1,45);
+		add_child(child,node,0,45);
+		node=node->next;
+		add_child(child,node,0,45);
+		node=node->next;
+		add_child(child,node,0,45);
+		node=node->next;
+		add_child(child,node,0,45);
+		node=node->next;
+			return node;
+	}
+	else{
+	treeNode *child=add_child(root,createTokenNtr("brackets"),1,46);
+		add_child(child,node,0,46);
+		node=node->next;
+		add_child(child,node,0,46);
+		node=node->next;
+			return node;
+		}
+}
+//<assignment> <varName> EQU <expression> SEMICOLON
+token * assignment(token *node,treeNode *root){
+		treeNode *child=add_child(root,createTokenNtr("assignment"),1,47);
+		token *move=varName(node,len,child);
+		add_child(child,move,0,47);
+		move=move->next;
+		move=expression(move,child);
+		add_child(child,move,0,47);
+		move=move->next;
+		return move;
+}
+//<varName> ID
+//<varName> ID SQRBO <index> SQRBC
+token * varName(token *node,treeNode *root){
+	token *temp=node;
+	temp=temp->next;
+	if(!strcmp(temp->tokenName,"SQRBO")){
+	treeNode *child=add_child(root,createTokenNtr("varName"),1,49);
+	add_child(child,node);
+	node=node->next;
+	add_child(child,node);
+	node=node->next;
+	token *move=index(node,len,child);
+	add_child(child,move);
+	move=move->next;
+	return move;
+	}
+	else{
+		treeNode *child=add_child(root,createTokenNtr("varName"),1,48);
+	add_child(child,node);
+	node=node->next;
+	return node;
+	}
+}
+
+//RISHAV's works end rule no-32 to 50
+
 // ----------------------------------------------------------------------------------------- ANIKET's REQUIREMENT
 
 token * singleStaticDimension(token *node, treeNode *root){
