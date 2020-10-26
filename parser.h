@@ -141,6 +141,19 @@ token *varType(token *node, treeNode *root2);
 token *jaggedInitialisationList(token *node, treeNode *root2);
 token *jaggedInitialisationList2(token *node, treeNode *root2);
 
+//rishav
+token * varList(token *,treeNode *);
+token * varList2(token *,treeNode *);
+token * dimensions(token *,treeNode *);
+token * dimensions2(token *,treeNode *);
+token * range(token *,treeNode *);
+token * singleStaticDimension(token *,treeNode *)
+token * index(token *,treeNode *)
+token * index2(token *,treeNode *)
+token * brackets(token *,treeNode *)
+token * assignment(token *,treeNode *)
+token * varName(token *,treeNode *)
+
 
 //sumit
 token *expression(token *,treeNode *);
