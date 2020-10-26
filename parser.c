@@ -274,16 +274,17 @@ token * index1(token *node,treeNode *root){
 		treeNode *child=add_child(root,createTokenNtr("index"),1,42);
 			token *move=range(node,child);
 			move=move->next;
-			move=index2(node,child);
+			move=index2(move,child);
 			return move;
 }
 token * index2(token *node,treeNode *root){
 		
-			if(!strcmp(node->tokenName,"ID") || !strcmp(node->tokenName,"NUM")){
+			if((!strcmp(node->tokenName,"ID")) || (!strcmp(node->tokenName,"NUM"))){
 			treeNode *child=add_child(root,createTokenNtr("index2"),1,43);
 			token *move=range(node,child);
 			move=move->next;
-			move=range(node,child);
+			move=index2(move,child);
+			
 			return move;
 			}
 			else{
@@ -326,7 +327,7 @@ token * assignment(token *node,treeNode *root){
 		token *move=varName(node,child);
 		add_child(child,move,0,47);
 		move=move->next;
-		move=expression(move,child);
+		//move=expression(move,child);
 		add_child(child,move,0,47);
 		move=move->next;
 		return move;
@@ -343,7 +344,7 @@ token * varName(token *node,treeNode *root){
 	add_child(child,node,0,49);
 	node=node->next;
 	token *move=index1(node,child);
-	add_child(child,node,0,49);
+	add_child(child,move,0,49);
 	move=move->next;
 	return move;
 	}
@@ -354,7 +355,6 @@ token * varName(token *node,treeNode *root){
 	return node;
 	}
 }
-
 //RISHAV's works end rule no-32 to 50
 
 
