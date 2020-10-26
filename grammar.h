@@ -11,17 +11,21 @@ typedef enum{
 }symbolType;
 
 typedef struct sym{
-    int value;
-    symbolType tag;
+    int value;	// id number of terminal / ntr
+    symbolType tag; // 0=tr, 1=ntr
     struct sym *next;
     struct sym *prev;
 }symbolNode;
 
 typedef struct{
-    int value;
+    int value;	// id number of the ntr (lhs of a rule)
     symbolNode *front;
     symbolNode *rear;
 }grammar;
+// end result grammar: g[grammarRules], starting index from 0
+
+extern int grammarRules; // change in grammar.c
+
 int searchNonTerminal(char *datavalue);
 int searchTerminal(char *datavalue);
 grammar* addingRule(char *buffer,int lineno, grammar* g);

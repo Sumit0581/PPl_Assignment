@@ -507,3 +507,4 @@ void printNTree(treeNode* x,
  //           it == (x->root.size()) - 1); 
     flag[depth] = 1; 
 } 
+

@@ -1,6 +1,7 @@
 #include "grammar.h"
 
 int bufferferSize = 180;
+// extern variable
 int grammarRules = 57;
 
 int searchNonTerminal(char *datavalue){
@@ -127,7 +128,7 @@ void printGrammar(grammar* g){
 	printf("\n\n----PRINTING GRAMMAR--- (value=id, tag= 0:terminal, 1:non terminal) \n\n");
 	for(int i=0;i<grammarRules;i++){
 		printf("RuleNo=%d:, LHSNtrID=%d -> ",i+1,g[i].value);
-		symbolNode *s = (symbolNode*)malloc(sizeof(symbolNode));
+		symbolNode *s; // = (symbolNode*)malloc(sizeof(symbolNode));
 		s=g[i].front;
 		while(s!=NULL)
 		{

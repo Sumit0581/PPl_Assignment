@@ -1,0 +1,449 @@
+INPUT1
+
+declare s3 : jagged array [ 4 .. 7 ] [ ] [ ] of integer ;
+R1 [ 4 ] : size 3 : values { 21 641 23 36 125 ; 54 221 43 ; 287 501 453 334 23 }
+R1 [ 5 ] : size 2 : values { 12 10 100 ; 76 15 8 54 432 }
+R1 [ 6 ] : size 3 : values { 17 61 928 785 875 ; 334 121 61 9 ; 32 465 123 }
+R1 [ 7 ] : size 4 : values { 210 71 ; 90 47 32 10 93 ; 332 453 12 634 ; 44 53 55 134 }
+
+
+OUTPUT1
+
+
+Start 0 1
+jaggedDeclaration 1 1
+declare 2 0
+ 
+ID 2 0
+ 
+COLON 2 0
+ 
+jagged 2 0
+ 
+array 2 0
+ 
+singleStaticDimension<?? 2 1
+ 
+brackets<?? 2 1
+ 
+of 2 0
+ 
+integer 2 0
+ 
+SEMICOLON 2 0
+ 
+jaggedInitialisationList 2 1
+jaggedInitialisation 3 1
+R1 4 0
+ 
+SQRBO 4 0
+ 
+NUM 4 0
+ 
+SQRBC 4 0
+ 
+COLON 4 0
+ 
+size 4 0
+ 
+NUM 4 0
+ 
+COLON 4 0
+ 
+values 4 0
+ 
+CBO 4 0
+ 
+numberList 4 1
+numberList2 5 1
+NUM 6 0
+ 
+numberList4 6 1
+NUM 7 0
+ 
+numberList4 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+EPS 11 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 5 1
+SEMICOLON 6 0
+ 
+numberList2 6 1
+NUM 7 0
+ 
+numberList4 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+EPS 10 0
+ 
+ 
+ 
+ 
+ 
+numberList3 6 1
+SEMICOLON 7 0
+ 
+numberList2 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+EPS 13 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 7 1
+EPS 8 0
+ 
+ 
+ 
+ 
+ 
+CBC 4 0
+ 
+ 
+jaggedInitialisationList2 3 1
+jaggedInitialisation 4 1
+R1 5 0
+ 
+SQRBO 5 0
+ 
+NUM 5 0
+ 
+SQRBC 5 0
+ 
+COLON 5 0
+ 
+size 5 0
+ 
+NUM 5 0
+ 
+COLON 5 0
+ 
+values 5 0
+ 
+CBO 5 0
+ 
+numberList 5 1
+numberList2 6 1
+NUM 7 0
+ 
+numberList4 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+EPS 10 0
+ 
+ 
+ 
+ 
+ 
+numberList3 6 1
+SEMICOLON 7 0
+ 
+numberList2 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+EPS 13 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 7 1
+EPS 8 0
+ 
+ 
+ 
+ 
+CBC 5 0
+ 
+ 
+jaggedInitialisationList2 4 1
+jaggedInitialisation 5 1
+R1 6 0
+ 
+SQRBO 6 0
+ 
+NUM 6 0
+ 
+SQRBC 6 0
+ 
+COLON 6 0
+ 
+size 6 0
+ 
+NUM 6 0
+ 
+COLON 6 0
+ 
+values 6 0
+ 
+CBO 6 0
+ 
+numberList 6 1
+numberList2 7 1
+NUM 8 0
+ 
+numberList4 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+EPS 13 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 7 1
+SEMICOLON 8 0
+ 
+numberList2 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+EPS 13 0
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 8 1
+SEMICOLON 9 0
+ 
+numberList2 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+EPS 13 0
+ 
+ 
+ 
+ 
+ 
+numberList3 9 1
+EPS 10 0
+ 
+ 
+ 
+ 
+ 
+CBC 6 0
+ 
+ 
+jaggedInitialisationList2 5 1
+jaggedInitialisation 6 1
+R1 7 0
+ 
+SQRBO 7 0
+ 
+NUM 7 0
+ 
+SQRBC 7 0
+ 
+COLON 7 0
+ 
+size 7 0
+ 
+NUM 7 0
+ 
+COLON 7 0
+ 
+values 7 0
+ 
+CBO 7 0
+ 
+numberList 7 1
+numberList2 8 1
+NUM 9 0
+ 
+numberList4 9 1
+NUM 10 0
+ 
+numberList4 10 1
+EPS 11 0
+ 
+ 
+ 
+ 
+numberList3 8 1
+SEMICOLON 9 0
+ 
+numberList2 9 1
+NUM 10 0
+ 
+numberList4 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+NUM 13 0
+ 
+numberList4 13 1
+NUM 14 0
+ 
+numberList4 14 1
+EPS 15 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 9 1
+SEMICOLON 10 0
+ 
+numberList2 10 1
+NUM 11 0
+ 
+numberList4 11 1
+NUM 12 0
+ 
+numberList4 12 1
+NUM 13 0
+ 
+numberList4 13 1
+NUM 14 0
+ 
+numberList4 14 1
+EPS 15 0
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 10 1
+SEMICOLON 11 0
+ 
+numberList2 11 1
+NUM 12 0
+ 
+numberList4 12 1
+NUM 13 0
+ 
+numberList4 13 1
+NUM 14 0
+ 
+numberList4 14 1
+NUM 15 0
+ 
+numberList4 15 1
+EPS 16 0
+ 
+ 
+ 
+ 
+ 
+ 
+numberList3 11 1
+EPS 12 0
+ 
+ 
+ 
+ 
+ 
+ 
+CBC 7 0
+ 
+ 
+jaggedInitialisationList2 6 1
+EPS 7 0
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+

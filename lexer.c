@@ -19,6 +19,7 @@ int numOfTr=32, numOfNtr=31, numOfKeywords=13;	//numOfTr currently include keywo
 char **terminals;   // can remove everything about these three variables, even though they took a lot time
 char **nonterminals;
 char **keywords;
+
 int lineNum =1;
 int isHashBuilt = 0;
 
@@ -236,7 +237,7 @@ void printToken(token *tk){
 
         returns: void
     */
-    printf("%d,%s,%s,%d\t", tk->lineNum, tk->lexeme, tk->tokenName, tk->tag);
+    printf("(%d,%d,%s,%s,%d)\n", tk->id, tk->lineNum, tk->lexeme, tk->tokenName, tk->tag);
     return;
 }
 
@@ -248,7 +249,7 @@ void printTokenStream(tokenStream *s){
 
         returns: void
     */
-    printf("\n\n----PRINTING TOKENSTREAM (lineNum, lexeme, tokenName, tag)---\n\n");
+    printf("\n\n----PRINTING TOKENSTREAM (id ,lineNum, lexeme,  tokenName, tag)---\n\n");
     token *temp = s->head;
     int i=1;	
     while(temp!=NULL){
@@ -413,6 +414,7 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
         fflush(stdout); //if there is anything in buffer flush it in stdout
         return;
     }
+    int a=0;	//primary key id for token in tokenStream
     char line[400];
     const char delimiter[2]= " ";
     while(fgets(line,400,src)!=NULL){
@@ -423,6 +425,7 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
             token *tk = getToken(word);
             fflush(stdout);
             tk->lineNum = lineNum;
+            tk->id = a++;
             tk->next= NULL;
             insertInStream(s,tk);
             word = strtok(NULL,delimiter);
@@ -438,5 +441,6 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     insertInStream(s,tk);
     return;
 }
+
 
 

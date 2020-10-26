@@ -1,48 +1,39 @@
 <program> program BO BC CBO <declarationList> <assignmentList> CBC
-<declarationList> <declaration> <declarationList2>
-<declarationList2> <declaration> <declarationList2>
-<declarationList2> EPS
-<assignmentList> <assignment> <assignmentList2>
-<assignmentList2> <assignment> <assignmentList2>
-<assignmentList2> EPS
+<declarationList> <declarationList> <declaration>  
+<declarationList> <declaration>
+<assignmentList> <assignmentList> <assignment> 
+<assignmentList> <assignment>
 <declaration> <varDeclaration>
 <declaration> <listDeclaration>
 <declaration> <arrayDeclaration>
 <declaration> <jaggedDeclaration>
 <varDeclaration> declare ID COLON <varType> SEMICOLON
 <listDeclaration> declare list of variables <varList> COLON <varType> SEMICOLON
-<arrayDeclaration> declare ID COLON array <dimensions> of integer SEMICOLON
-<arrayDeclaration> declare list of variables <varList> COLON array <dimensions> of integer SEMICOLON
-<jaggedDeclaration> declare ID COLON jagged array <singleStaticDimension> <brackets> of integer SEMICOLON <jaggedInitialisationList>
-<jaggedDeclaration> declare list of variables <varList> COLON jagged array <singleStaticDimension> <brackets> of integer SEMICOLON <jaggedInitialisationList>
-<jaggedInitialisationList> <jaggedInitialisation> <jaggedInitialisationList2>
-<jaggedInitialisationList2> <jaggedInitialisation> <jaggedInitialisationList2>
-<jaggedInitialisationList2> EPS
+<arrayDeclaration> declare ID COLON array <dimensions> of <arrType> SEMICOLON
+<arrayDeclaration> declare list of variables <varList> COLON array <dimensions> of <arrType> SEMICOLON
+<jaggedDeclaration> declare ID COLON jagged array <singleStaticDimension> <brackets> of <arrType> SEMICOLON <jaggedInitialisationList>
+<jaggedDeclaration> declare list of variables <varList> COLON jagged array <singleStaticDimension> <brackets> of <arrType> SEMICOLON <jaggedInitialisationList>
+<jaggedInitialisationList> <jaggedInitialisationList> <jaggedInitialisation>
+<jaggedInitialisationList> <jaggedInitialisation>
 <jaggedInitialisation> R1 SQRBO NUM SQRBC COLON size NUM COLON values CBO <numberList> CBC
-<numberList> <numberList2> <numberList3>
-<numberList3> SEMICOLON <numberList2> <numberList3>
-<numberList3> EPS
-<numberList2> NUM <numberList4>
-<numberList2> EPS
-<numberList4> NUM <numberList4>
-<numberList4> EPS
+<numberList> <numberList> SEMICOLON <numberList2> 
+<numberList> <numberList2>
+<numberList2> <numberList2> NUM 
+<numberList2> NUM 
 <varType> integer
 <varType> boolean
 <varType> real
-<varList> ID ID <varList2>
-<varList> ID COMMA ID <varList2>
-<varList2> ID <varList2>
-<varList2> COMMA ID <varList2>
-<varList2> EPS
-<dimensions> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
-<dimensions2> SQRBO <range> DOTDOT <range> SQRBC <dimensions2>
-<dimensions2> EPS
+<arrType> integer
+<varList> ID ID
+<varList> ID <varList>
+<dimensions> <singleDimension> <dimensions>
+<dimensions> <singleDimension>
+<singleDimension> SQRBO <range> DOTDOT <range> SQRBC
 <range> ID
 <range> NUM
 <singleStaticDimension> SQRBO NUM DOTDOT NUM SQRBC
-<index> <range> <index2>
-<index2> <range> <index2>
-<index2> EPS
+<index> <index> <range>
+<index> <range>
 <brackets> SQRBO SQRBC SQRBO SQRBC
 <brackets> SQRBO SQRBC
 <assignment> <varName> EQU <expression> SEMICOLON
@@ -50,21 +41,17 @@
 <varName> ID SQRBO <index> SQRBC
 <expression> <arithmeticExpression>
 <expression> <booleanExpression>
-<arithmeticExpression> <mulExpression> <arithmeticExpression2>
-<arithmeticExpression2> <sumop> <mulExpression> <arithmeticExpression2>
-<arithmeticExpression2> EPS
-<mulExpression> <integerFactor> <mulExpression2> 
-<mulExpression2> <mulop> <integerFactor> <mulExpression2>
-<mulExpression2> EPS
+<arithmeticExpression> <arithmeticExpression> <sumop> <mulExpression>
+<arithmeticExpression> <mulExpression>
+<mulExpression> <mulExpression> <mulop> <mulExpression>
+<mulExpression> <integerFactor>
 <integerFactor> <varName>
 <integerFactor> NUM 
 <sumop> PLUS
 <sumop> MINUS
 <mulop> MUL
 <mulop> DIV
-<booleanExpression> <andExpression> <booleanExpression2>
-<booleanExpression2> OROP <andExpression> <booleanExpression2>
-<booleanExpression2> EPS
-<andExpression> <varName> <andExpression2>
-<andExpression2> ANDOP <varName> <andExpression2>
-<andExpression2> EPS
+<booleanExpression> <booleanExpression> OROP <andExpression>
+<booleanExpression> <andExpression>
+<andExpression> <andExpression> ANDOP <andExpression>
+<andExpression> <varName>

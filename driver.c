@@ -61,6 +61,13 @@ options.
 			token *t = createTokenNtr("Start");
 			treeNode *root = new_node(t,1, 99);
 			
+			//token *result = numberList2(h,root);
+			//token *result = numberList3(h,root);
+			//token *result = numberList4(h,root);
+			//token *result = numberList(h,root);
+			//token *result = jaggedInitialisation(h, root);
+			//token *result = jaggedInitialisation(h,root);
+			//token *result = varType(h,root);
 			//token *result = jaggedInitialisationList(h,root);
 			//token *result = jaggedInitialisationList2(h,root);
 
@@ -98,5 +105,6 @@ options.
 	
 	return 0;
 }
+
 
 

@@ -1,6 +1,6 @@
 #ifndef interface
 #define interface
 
-#include "grammar.h"
+#include "parser.h"
 
 #endif
