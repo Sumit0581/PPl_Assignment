@@ -1,391 +1,509 @@
-#include<stdio.h>
-#include<string.h>
 #include<ctype.h>
-#include<stdlib.h>
+#include "parser.h"
 
-char input[10];
-int i,error;
-int depth = 0;
+// ---------------------------------------------------------------------------------------- USELESS AS OF NOW
 
-typedef enum{
-    terminal,nonTerminal
-}symbolType;
-
-typedef struct sym{
-    int value;
-    symbolType tag;
-    struct sym *next;
-    struct sym *prev;
-}symbolNode;
-
-typedef struct{
-    int value;
-    symbolNode *front;
-    symbolNode *rear;
-}grammar;
-
-typedef enum{
-  integer,real,Boolean
-}Datatype;
-
-typedef enum{
-  rectangularArray,jaggedArray
-}ArrayType;
-
-struct RectangularArray{
-    ArrayType type;
-    int dimensions;
-    int *range[2];
-    Datatype basicElementType;
-  };
-
-struct JaggedArray{
-    ArrayType type;
-    int dimensions;
-    int range_R1[2];
-    union range_R2{
-      int *two_Dim;
-      int **three_Dim;
-    }R2;
-    Datatype basicElementType;
-  };
-typedef union TypeExpression{
-  Datatype primDt;
-  struct RectangularArray rectangularArray;
-  struct JaggedArray jaggedArray;
-}typeExpression;
-
-
-typedef struct TypeExpressionTable{
-  char name[30];
-  int type; //0 for primitive, 1 for rec array, 2 for jagged array
-  char *arrayType; //[possible:static,dynamic,not_applicable] not made enum data type cause 'static' is a keyword in C and will cause problem.
-  typeExpression typexpr;
-}typeExpressionTable;
-
-
-typedef struct terminal{
-  char lexeme[30];
-  int lno;
-}tr;
-
-typedef struct nonTerminal
-{
-  typeExpression typeExp;
-  grammar rule;
-}ntr;
-typedef struct TreeNode{
-  char symbol[30];
-  symbolType tag;
-  struct TreeNode *firstChild;
-  struct TreeNode *nextSibling;
-  union Data{
-    tr Terminals;
-    ntr Nonterminals;
-  }data;
-}treeNode;
-
-typedef struct TOKEN{
-    //numeral value; // to store num or rnum
-    int id;
-    int lineNum;
-    char lexeme[30]; // actual token in source code
-    char tokenName[30]; // 
-    int tag;   // 0 : Valid Lexeme
-               // 1 : Valid Int or floating point number
-               // 2 : Valid Floating Point no. with E stored in lexeme
-    struct TOKEN *next;
-}token;
-
-
-typedef struct tokens{
-    token *head;
-    int len;
-}tokenStream;
-
-treeNode *new_node(char *,int);
-token *expression(token *,treeNode *);
-token *arithmeticExpression(token *,treeNode *);
-token *arithmeticExpression2(token *,treeNode *);
-token *mulExpression(token *,treeNode *);
-token *mulExpression2(token *,treeNode *);
-token *sumop(token *,treeNode *);
-token *mulop(token *,treeNode *);
-token *integerFactor(token *,treeNode *);
-token *booleanExpression(token *,treeNode *);
-token *booleanExpression2(token *,treeNode *);
-token *andExpression(token *,treeNode *);
-token *andExpression2(token *,treeNode *);
-void printParseTree(treeNode *);
-
-int main(){
-  error=0;
-  // printf("Enter an arithmetic expression   :  "); // Eg: a+a*a
-  // gets(input);
-  // treeNode *root = (treeNode *)malloc(sizeof(treeNode));
-  
-  tokenStream *s = (tokenStream *)malloc(sizeof(tokenStream));
-  s->len = 6;
-  s-> head = (token *)malloc(sizeof(token));
-  s->head->id= 1;
-  s->head->lineNum=1;
-  strcpy(s->head->lexeme,"abcd");
-  strcpy(s->head->tokenName,"ID");
-  s->head->tag =1;
-
-  token *a = (token *)malloc(sizeof(token));
-  a->id=2;
-  a->lineNum = 1;
-  strcpy(a->lexeme,"|||");
-  strcpy(a->tokenName,"PLUS");
-  a->tag = 1;
-
-  token *b = (token *)malloc(sizeof(token));
-  b->id=3;
-  b->lineNum = 1;
-  strcpy(b->lexeme,"efgh");
-  strcpy(b->tokenName,"ID");
-  b->tag = 1;
-
-  token *c = (token *)malloc(sizeof(token));
-  c->id=4;
-  c->lineNum = 1;
-  strcpy(c->lexeme,"&&&");
-  strcpy(c->tokenName,"MUL");
-  c->tag = 1;
-
-  token *d = (token *)malloc(sizeof(token));
-  d->id=5;
-  d->lineNum = 1;
-  strcpy(d->lexeme,"2345");
-  strcpy(d->tokenName,"NUM");
-  d->tag = 1;
-
-  token *e = (token *)malloc(sizeof(token));
-  e->lineNum = 2;
-  e->id=6;
-  strcpy(e->lexeme,";");
-  strcpy(e->tokenName,"SEMICOLON");
-  e->tag = 1;
-
-  s->head->next = a;
-  a->next = b;
-  b->next=c;
-  c->next=d;
-  d->next=e;
-  e->next=NULL;
-  
-  treeNode *root = new_node("Start",1);
-  printf("Hello");
-  fflush(stdout);
-
-  token *result = expression(s->head,root);
-  if(!strcmp(result->tokenName,"SEMICOLON"))
-    printf("\nAccepted..!!!\n");
-  else printf("\nRejected..!!!\n");
-  printParseTree(root);
+void printError2(char *c){
+	printf("In printError2() %s\n", c);
 }
 
 
-treeNode *new_node(char* data,int tag){
+
+// ------------------------------------------------------------------------------------------ OLD
+
+void fContainer(token *start, grammar *g){
+	printf("trying %s %s ",start->lexeme, start->tokenName);
+	f(start, g);
+	putchar('\n');
+	return;
+}
+
+int f(token *ntr, grammar *g){
+	/*
+	ntr: the non terminal to be expanded via rules
+	*/
+	//printf("%lu \n",sizeof(g));
+	int id  = search(ntr->tokenName, 1);
+	int found =0;
+	for(int i=0; i<grammarRules; i++){ /*from grammar.h, grammar.c*/
+		if(g[i].value==id){
+			found =1;
+			printf(": %s,%s- found one rule \n", ntr->tokenName, ntr->lexeme);	
+		}		
+		
+	}
+	//if(!found) printf("%s | %s rule not found\n", ntr->tokenName, ntr->lexeme);
+	return 0; // no match found
+}
+
+// ----------------------------------------------------------------------------------------- UTILITY
+
+token * createTokenNtr(char *data){
+	token *tk = (token *) malloc(sizeof(token));
+	tk->tag =1;
+	strcpy(tk->tokenName, data);
+	return tk;
+}
+
+token * createTokenEPS(){
+	token *tk = (token *) malloc(sizeof(token));
+	tk->tag = 0;
+	strcpy(tk->tokenName, "EPS");
+	strcpy(tk->lexeme, "EPS");
+	tk->lineNum = -100;
+	return tk;
+}
+
+
+treeNode *new_node(token *t,int tag, int rule){
   treeNode *new_node = malloc(sizeof(treeNode));
-  strcpy(new_node->symbol,data);
+  strcpy(new_node->symbol,t->tokenName);
   new_node-> tag = tag;
   new_node->firstChild = NULL;
   new_node->nextSibling =NULL;
+  //terminal
+  if(tag==0){
+  	tr *n = (tr *) malloc(sizeof(tr));
+  	strcpy(n->lexeme, t->lexeme);
+  	n->lno = t->lineNum;
+  	new_node->data.Terminals = *n; 
+  }
+  // non terminal
+  else{
+    	ntr *n = (ntr *) malloc(sizeof(ntr));
+  	//n->typeExp = NULL;	// to be filled while traversal
+  	n->rule = rule;
+  	new_node->data.Nonterminals = *n;
+  }
   return new_node;
 }
 
-treeNode * add_sibling(treeNode *n,char *data,int tag){
+treeNode * add_sibling(treeNode *n,token *t,int tag, int rule){
   if(n==NULL) return NULL;
   while(n->nextSibling) n=n->nextSibling;
-  return (n->nextSibling=new_node(data,tag));
+  return (n->nextSibling=new_node(t,tag, rule));
 }
 
-treeNode *add_child(treeNode *n,char* data,int tag){
+treeNode *add_child(treeNode *n,token *t,int tag,int rule ){
   if(n==NULL) return NULL;
   if(n->firstChild)
-    return add_sibling(n->firstChild,data,tag);
+    return add_sibling(n->firstChild,t ,tag, rule);
   else
-    return (n->firstChild=new_node(data,tag));
+    return (n->firstChild=new_node(t,tag, rule));
 }
 
-
-token *varName(token *node,treeNode *root){
-  if(!strcmp(node->tokenName,"ID")){
-    treeNode *temp = add_child(root,"varName",1);
-    add_child(temp,node->lexeme,0);
-    return node->next;
-  } 
-  else{
-    return node;
-  }
-}
-
-token *expression(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"Expression",1);
-  token *a = arithmeticExpression(node,temp);
-  printf("%d ",a->id);
-  if(strcmp(a->tokenName,"SEMICOLON")){
-    temp->firstChild = NULL;
-    token *b= booleanExpression(node,temp);
-    if(b->id==node->id)
-      return node;
-    else
-      return b; 
-  }
-  else
-    return a;
-}
-
-token *arithmeticExpression(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"ArithmeticExpression",1);
-  token *a= mulExpression(node,temp);
-  if(a->id==node->id) return node;
-  token *b = arithmeticExpression2(a,temp);
-  return b;
-}
-
-token *arithmeticExpression2(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"ArithmeticExpression2",1);
-  token *a = sumop(node,temp);
-  if(a->id==node->id){
-    temp->firstChild = NULL;
-    add_child(temp,"EPS",0);
-    return node;
-  }
-  else{
-    token *b = mulExpression(a,temp);
-    token *c = arithmeticExpression2(b,temp);
-    return c;
-  }
-
-}
-
-token *mulExpression(token *node,treeNode *root){ 
-  treeNode *temp = add_child(root,"MulExpression",1);
-  token *a = integerFactor(node,temp);
-  if(a->id==node->id) return node;
-  token *b = mulExpression2(a,temp);
-  return b;
-}
-
-token *mulExpression2(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"MulExpression2",1);
-  token *a = mulop(node,temp);
-  if(a->id==node->id){
-    temp->firstChild = NULL;
-    add_child(temp,"EPS",0);
-    return node;
-  }
-  else{
-    token *b = integerFactor(a,temp);
-    if(b->id==a->id) return node;
-    token *c = mulExpression2(b,temp);
-    return c;
-  }
-}
-
-token *sumop(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"SUMOP",1);
-  if(!strcmp(node->tokenName,"PLUS")){
-    add_child(temp,"PLUS",0);
-    return node->next;
-  }
-  else if(!strcmp(node->tokenName,"MINUS")){
-    add_child(temp,"MINUS",0);
-    return node->next;
-  }
-  else{
-    return node;
-  }
-  
-}
-
-token *mulop(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"MULOP",1);
-  if(!strcmp(node->tokenName,"MUL")){
-    add_child(temp,"MUL",0);
-    return node->next;
-  }
-  else if(!strcmp(node->tokenName,"DIV")){
-    add_child(temp,"DIV",0);
-    return node->next;
-  }
-  else{
-    return node;
-  }
-}
-
-token *integerFactor(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"IntegerFactor",1);
-  if(!strcmp(node->tokenName,"NUM")){
-    add_child(temp,"NUM",0);
-    return node->next;
-  }
-  else{
-    token *a = varName(node,temp);
-    return a;
-  }
-}
-
-token *booleanExpression(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"BooleanExpression",1);
-  token *a = andExpression(node,temp);
-  if(a->id==node->id) return node;
-  token *b = booleanExpression2(a,temp);
-  return b;
-}
-
-token *booleanExpression2(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"BooleanExpression2",1);
-  if(!strcmp(node->tokenName,"OROP")){
-    add_child(temp,"OROP",0);
-    token *a = andExpression(node->next,temp);
-    if(a->id==node->id) return node;
-    token *b = booleanExpression2(a,temp);
-    return b;
-  }
-  else{
-    temp->firstChild=NULL;
-    add_child(temp,"EPS",0);
-    return node;
-  }
-}
-
-token *andExpression(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"AndExpression",1);
-  token *a = varName(node,temp);
-  if(a->id==node->id) return node;
-  token *b = andExpression2(a,temp);
-  return b;
-}
-
-token *andExpression2(token *node,treeNode *root){
-  treeNode *temp = add_child(root,"AndExpression2",1);
-  if(!strcmp(node->tokenName,"ANDOP")){
-    add_child(temp,"ANDOP",0);
-    token *a = varName(node->next,temp);
-    if(a->id==node->id) return node;
-    token *b= andExpression2(a,temp);
-    return b;
-  }
-  else{
-    temp->firstChild=NULL;
-    add_child(temp,"EPS",0);
-    return node;
-  }
-}
-
-
-void printParseTree(treeNode *root){
+int depth =0;	// yes, a global variable
+void printRecur(treeNode *root){
   treeNode *temp = root;
+  
   if(temp==NULL) return;
     printf("%s %d %d\n",temp->symbol,depth,temp->tag);
     depth++;
-    printParseTree(temp->firstChild);
+    printRecur(temp->firstChild);
     depth--;
     printf(" \n");
-    printParseTree(temp->nextSibling);
+    printRecur(temp->nextSibling);
+}
+void printParseTree(treeNode *root){
+	printf("\n\n-------PRINTING PARSE TREE--------(symbol, depth, tag (0/1))\n\n");
+	printRecur(root);
 }
 
+// ----------------------------------------------------------------------------------------- ANIKET's REQUIREMENT
+
+token * singleStaticDimension(token *node, treeNode *root){
+	// dummy 
+	add_child(root, createTokenNtr("singleStaticDimension<??"), 1, 169);
+	return node->next;
+}
+token * brackets(token *node, treeNode *root){
+	// dummy 
+	add_child(root, createTokenNtr("brackets<??"), 1, 169);
+	for(int i=0; i<8; i++) node = node->next;
+	return node;
+}
+
+
+token * varList(token *node, treeNode *root){
+	// dummy
+	add_child(root, createTokenNtr("varList<??"), 1, 169);
+	return node->next->next->next;			//TODO: HARDCODED here (have faith that this func will be alright)
+}	
+
+// ----------------------------------------------------------------------------------------- ANIKET's WORK
+
+
+token *numberList(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("numberList"), 1, 21);
+	token *a = numberList2(node, root);
+	node = a;
+	a = numberList3(node, root);
+	node = a;
+	return node;
+}
+
+token *numberList2(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("numberList2"), 1, 24);
+	if(strcmp(node->tokenName, "NUM")==0){
+		add_child(root, node , 0, 99);
+		node = node->next;
+		token *a = numberList4(node, root);
+		return a;
+	}
+	else {
+		root->data.Nonterminals.rule = 25;
+		add_child(root,createTokenEPS(),0, 169);		//TODO:
+		return node;
+	}
+}
+
+token *numberList4(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("numberList4"), 1, 26);
+	if(strcmp(node->tokenName, "NUM")==0){
+		add_child(root, node, 0, 99);
+		node = node->next;
+		token *a = numberList4(node, root);
+		return a;
+	}
+	else {
+		add_child(root,createTokenEPS(), 0, 169);
+		return node;
+	}
+}
+
+token *numberList3(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("numberList3"), 1, 22);
+	if(strcmp(node->tokenName, "SEMICOLON")==0){
+		add_child(root, node, 0, 99);
+		node = node->next;
+		token *a = numberList2(node, root);
+		node = a;
+		a = numberList3(node, root);
+		return a;
+	}
+	else {
+		add_child(root, createTokenEPS(), 0, 169);
+		return node;
+	}
+}
+
+token *varType(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("varType"), 1, 28);
+	if(strcmp(node->tokenName, "integer")==0){
+			add_child(root, node, 0, 99);
+	}
+	else if(strcmp(node->tokenName, "real")==0){
+			add_child(root, node, 0, 99);
+			root->data.Nonterminals.rule = 29;
+	}
+	else if(strcmp(node->tokenName, "boolean")==0){
+			add_child(root, node, 0, 99);
+			root->data.Nonterminals.rule = 30;
+	} 
+	node = node->next;
+	return node;
+
+}
+
+token *jaggedInitialisationList(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("jaggedInitialisationList"), 1, 17);
+	
+	token *a =jaggedInitialisation(node, root);
+	node = a;
+	a = jaggedInitialisationList2(node, root);
+	node = a;
+	return node;
+
+}
+
+token *jaggedInitialisationList2(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("jaggedInitialisationList2"), 1, 18);
+	if(strcmp(node->tokenName, "R1")==0){
+		token *a =jaggedInitialisation(node, root);
+		node = a;
+		a = jaggedInitialisationList2(node, root);
+		node = a;
+		return node;
+	}
+	else {
+		root->data.Nonterminals.rule = 19;
+		add_child(root,createTokenEPS(),0, 169);
+		return node;
+	}
+}
+
+
+token *jaggedInitialisation(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("jaggedInitialisation"), 1, 20);
+	token *prev = node;
+	if(strcmp(node->tokenName, "R1")==0){
+		add_child(root, node, 0, 99);
+		node= node->next;
+		if(strcmp(node->tokenName, "SQRBO")==0){
+			add_child(root, node, 0, 99);
+			node= node->next;
+			if(strcmp(node->tokenName, "NUM")==0){
+				add_child(root, node, 0, 99);
+				node= node->next;
+				if(strcmp(node->tokenName, "SQRBC")==0){
+					add_child(root, node, 0, 99);
+					node= node->next;
+					if(strcmp(node->tokenName, "COLON")==0){
+						add_child(root, node, 0, 99);
+						node= node->next;
+						if(strcmp(node->tokenName, "size")==0){
+							add_child(root, node, 0, 99);
+							node= node->next;
+							if(strcmp(node->tokenName, "NUM")==0){
+								add_child(root, node, 0, 99);
+								node= node->next;
+								if(strcmp(node->tokenName, "COLON")==0){
+									add_child(root, node, 0, 99);
+									node= node->next;
+									if(strcmp(node->tokenName, "values")==0){
+										add_child(root, node, 0, 99);
+										node= node->next;
+										if(strcmp(node->tokenName, "CBO")==0){
+											add_child(root, node, 0, 99);
+											node= node->next;
+											
+											token *a = numberList(node, root);
+											if(a==node) {printf("Parsing Error Inside Jagged Array declaration | SYNTACTICALLY Wrong | (Not assumed)\n"); return prev;}
+											node =a;
+											if(strcmp(node->tokenName, "CBC")==0){
+												add_child(root, node, 0, 99);
+												node= node->next;
+												return node;
+											}	
+										}
+									}									
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return prev;	
+}
+
+
+token * jaggedDeclaration(token *node, treeNode *root2){
+	treeNode *root = add_child(root2, createTokenNtr("jaggedDeclaration"), 1, 15);
+	token *prev = node;
+	if(strcmp(node->tokenName, "declare")==0){
+		add_child(root, node, 0, 99);
+		node= node->next;
+		
+		// rule 1
+		if(strcmp(node->tokenName, "ID")==0){
+			/*
+			add_child(root, "ID", 0);
+						
+			node = node->next;
+			add_child(root, "COLON", 0);			
+			
+			node = node->next;
+			add_child(root, "jagged", 0));			
+			
+			node = node->next;
+			add_child(root, "array", 0);
+			
+			node = node->next;
+			token *a = singleStaticDimension();
+			*/
+					
+			
+			add_child(root, node, 0, 99);		//added "ID"-no, the lexeme say "i1"-yes			
+			node = node->next;
+			if(strcmp(node->tokenName, "COLON")==0){
+				add_child(root, node, 0, 99);	// "COLON"
+				node = node->next;
+				if(strcmp(node->tokenName, "jagged")==0){
+					add_child(root, node, 0, 99); // "jagged"
+					node = node->next;
+					if(strcmp(node->tokenName, "array")==0){	
+						add_child(root, node, 0, 99); //"array"
+						//printf("YesB %d %s %s\n", node->id, node->tokenName , "hmm");
+						
+						node = node->next;
+						
+						//treeNode *child = add_child(root, "singleStaticDimension", 1);	// "singleStaticDimension" node will be added by the func itself
+						token *a =  singleStaticDimension(node, root);
+						
+						if(a == node) {printf("Couldn't complete singleStaticDimension() but this should be must\n"); return prev;} //this must not happen
+						//printf("YesA %d %s %s\n", node->id, node->tokenName , "hmm");
+						node = a;
+						//child = add_child(root, "brackets", 1);
+						//printf("Yes %d %s %s\n", node->id, node->tokenName , "hmm");
+						a = brackets(node, root);
+						if(a == node) {printf("Couldn't complete brackets() but this should be must\n"); return prev;} //this must not happen
+						
+						node =a;
+						//printf("%s", node->tokenName);
+						if(strcmp(node->tokenName, "of")==0){
+							//printf("Yes\n");
+							add_child(root, node, 0, 99);
+							node = node->next;
+							if(strcmp(node->tokenName, "integer")==0){
+								add_child(root, node, 0, 99);
+								node = node->next;
+								if(strcmp(node->tokenName, "SEMICOLON")==0){
+									add_child(root, node, 0, 99);
+									node = node->next;
+									
+									//child = add_child(root, "jaggedInitialisationList", 1);
+									a = jaggedInitialisationList(node, root);  
+									if(a == node) {printf("Couldn't complete jaggedInitialisationList() but this should be must\n"); return prev;} //this must not happen
+									node =a;
+									return node;
+								}
+							}
+						}					
+					}
+				}
+			}
+		}
+		
+		
+		// rule 2
+		else if(strcmp(node->tokenName, "list")==0){
+			root->data.Nonterminals.rule = 16;
+			add_child(root, node, 0, 99);
+			node = node->next;
+			if(strcmp(node->tokenName, "of")==0){
+				add_child(root, node, 0, 99);
+				node = node->next;
+				if(strcmp(node->tokenName, "variables")==0){
+					add_child(root, node, 0, 99);
+					node = node->next;
+					
+					//treeNode *child = add_child(root, "varList", 1);
+					token *a =  varList(node, root);
+					if(a == node) { printf("Couldn't complete varList() but this should be must\n"); return prev;} //this must not happen
+					node = a;
+					//printf("\n\nhi token is: %s %d\n", node->tokenName, node->id);
+					
+					if(strcmp(node->tokenName, "COLON")==0){
+						//printf("\n\nhi\n");	
+						add_child(root, node, 0, 99);
+						node = node->next;
+						if(strcmp(node->tokenName, "jagged")==0){
+							add_child(root, node, 0, 99);
+							node = node->next;
+							if(strcmp(node->tokenName, "array")==0){
+								add_child(root, node, 0, 99);
+								node = node->next;
+								
+								//child = add_child(root, "singleStaticDimension", 1);
+								a =  singleStaticDimension(node, root);
+								if(a == node) {printf("Couldn't complete singleStaticDimension() but this should be must as syntactically correct\n"); return prev;} //this must not happen
+								
+								node = a;
+								//child = add_child(root, "brackets", 1);
+								a = brackets(node, root);
+								if(a == node) {printf("Couldn't complete brackets() but this should be must\n"); return prev;} //this must not happen
+								//printf("\n\nhi token is: %s %d\n", a->tokenName, a->id);								
+								node =a;
+								if(strcmp(node->tokenName, "of")==0){
+									add_child(root, node, 0, 99);
+									node = node->next;
+									if(strcmp(node->tokenName, "integer")==0){
+										add_child(root, node, 0, 99);
+										node = node->next;
+										//printf("%s\n", node->tokenName);
+										if(strcmp(node->tokenName, "SEMICOLON")==0){
+											add_child(root, node, 0, 99);
+											node = node->next;
+											//printf("%s\n", node->tokenName);
+											//child = add_child(root, "jaggedInitialisationList", 1);
+											a = jaggedInitialisationList(node, root);
+											if(a == node) {printf("Couldn't complete jaggedInitialisationList() but this should be must\n"); return prev;} //this must not happen
+											//printf("\n\nhiya the token is: %s %d\n", a->tokenName, a->id);
+											node =a;
+											return node;  
+										}
+									}
+								}					
+							}
+						}
+					}	
+				}
+			}
+		}
+		
+		else
+		printError2("jaggedDeclaration");
+	}
+	return prev;
+}
+
+
+// ------------------------------------------------------------------------------------------------- FANCY
+
+int ENN=40;
+void printNTree(treeNode* x, 
+    int flag[ENN],  
+    int depth, int isLast ) 
+{ 
+    // Condition when node is None 
+    if (x == NULL)  
+        return; 
+      
+    // Loop to print the depths of the 
+    // current node 
+    for (int i = 1; i < depth; ++i) { 
+          
+        // Condition when the depth  
+        // is exploring 
+        if (flag[i] == 1) { 
+            /*cout << "| "
+                << " "
+                << " "
+                << " ";*/ 
+        	printf("|           ");
+        } 
+          
+        // Otherwise print  
+        // the blank spaces 
+        else { 
+            /*cout << " "
+                << " "
+                << " "
+                << " "; */
+        	printf("            ");	//12 spaces
+        } 
+    } 
+      
+    // Condition when the current 
+    // node is the root node 
+    if (depth == 0) 
+        //cout << x->n << '\n'; 
+      	printf("%s\n",x->symbol);
+    // Condtion when the node is  
+    // the last node of  
+    // the exploring depth 
+    else if (isLast) { 
+        //cout << "+--- " << x->n << '\n';
+        printf("+-----------%s\n", x->symbol);  
+        // No more childrens turn it  
+        // to the non-exploring depth 
+        flag[depth] = 0; 
+    } 
+    else { 
+        printf("+-----------%s\n", x->symbol);
+    } 
+  
+    int it = 0; 
+//    for (auto i = x->root.begin();  
+//    i != x->root.end(); ++i, ++it) 
+
+//	for(int i=0; i<10; i++) //TODO  
+        // Recursive call for the 
+        // children nodes 
+//        printNTree(*i, flag, depth + 1,  
+ //           it == (x->root.size()) - 1); 
+    flag[depth] = 1; 
+} 
