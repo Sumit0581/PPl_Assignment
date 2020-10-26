@@ -243,6 +243,7 @@ token* range(token *node,treeNode *root){
 			add_child(child,node,0,40);
 			return node;
 	}
+	return node;
 }
 //<singleStaticDimension> SQRBO NUM DOTDOT NUM SQRBC
 token * singleStaticDimension(token *node,treeNode *root){
@@ -269,7 +270,7 @@ token * singleStaticDimension(token *node,treeNode *root){
 //<index> <range> <index2>
 //<index2> <range> <index2>
 //<index2> EPS
-token * index(token *node,treeNode *root){
+token * index1(token *node,treeNode *root){
 		treeNode *child=add_child(root,createTokenNtr("index"),1,42);
 			token *move=range(node,child);
 			move=move->next;
@@ -322,7 +323,7 @@ token * brackets(token *node,treeNode *root){
 //<assignment> <varName> EQU <expression> SEMICOLON
 token * assignment(token *node,treeNode *root){
 		treeNode *child=add_child(root,createTokenNtr("assignment"),1,47);
-		token *move=varName(node,len,child);
+		token *move=varName(node,child);
 		add_child(child,move,0,47);
 		move=move->next;
 		move=expression(move,child);
@@ -337,24 +338,25 @@ token * varName(token *node,treeNode *root){
 	temp=temp->next;
 	if(!strcmp(temp->tokenName,"SQRBO")){
 	treeNode *child=add_child(root,createTokenNtr("varName"),1,49);
-	add_child(child,node);
+	add_child(child,node,0,49);
 	node=node->next;
-	add_child(child,node);
+	add_child(child,node,0,49);
 	node=node->next;
-	token *move=index(node,len,child);
-	add_child(child,move);
+	token *move=index1(node,child);
+	add_child(child,node,0,49);
 	move=move->next;
 	return move;
 	}
 	else{
 		treeNode *child=add_child(root,createTokenNtr("varName"),1,48);
-	add_child(child,node);
+	add_child(child,node,0,48);
 	node=node->next;
 	return node;
 	}
 }
 
 //RISHAV's works end rule no-32 to 50
+
 
 // ----------------------------------------------------------------------------------------- ANIKET's REQUIREMENT
 
