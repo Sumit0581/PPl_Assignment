@@ -25,13 +25,11 @@ typedef struct HASHNODE{
 }hashNode;
 
 typedef struct TOKEN{
-    //numeral value; // to store num or rnum
-    int lineNum;
+    int id; // 1,2,3,..primary key for tokens in sourceCode	//TODO : tell teammates to cover this
+    int lineNum; // lite for ntr
     char lexeme[30]; // actual token in source code
     char tokenName[30]; // 
-    int tag;   // 0 : Valid Lexeme
-               // 1 : Valid Int or floating point number
-               // 2 : Valid Floating Point no. with E stored in lexeme
+    int tag;	// 0 tr, 1 ntr, 2 keyword   
     struct TOKEN *next;
 }token;
 
