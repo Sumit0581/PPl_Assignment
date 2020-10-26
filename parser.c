@@ -359,7 +359,7 @@ token * varName(token *node,treeNode *root){
 
 
 // ----------------------------------------------------------------------------------------- ANIKET's REQUIREMENT
-
+/*
 token * singleStaticDimension(token *node, treeNode *root){
 	// dummy 
 	add_child(root, createTokenNtr("singleStaticDimension<??"), 1, 169);
@@ -378,7 +378,7 @@ token * varList(token *node, treeNode *root){
 	add_child(root, createTokenNtr("varList<??"), 1, 169);
 	return node->next->next->next;			//TODO: HARDCODED here (have faith that this func will be alright)
 }	
-
+*/
 // ----------------------------------------------------------------------------------------- ANIKET's WORK
 
 
