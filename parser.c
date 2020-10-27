@@ -690,6 +690,167 @@ token * jaggedDeclaration(token *node, treeNode *root2){
 }
 
 
+token *expression(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("expression"),1,50);
+  token *a = arithmeticExpression(node,temp);
+  if(strcmp(a->tokenName,"SEMICOLON")){
+    temp->firstChild = NULL;
+    temp->data.Nonterminals.rule = 51;
+    token *b= booleanExpression(node,temp);
+    if(b->id==node->id)
+      return node;
+    else
+      return b; 
+  }
+  else
+    return a;
+}
+
+token *arithmeticExpression(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("arithmeticExpression"),1,52);
+  token *a= mulExpression(node,temp);
+  if(a->id==node->id) return node;
+  token *b = arithmeticExpression2(a,temp);
+  return b;
+}
+
+token *arithmeticExpression2(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("arithmeticExpression2"),1,53);
+  token *a = sumop(node,temp);
+  if(a->id==node->id){
+    temp->firstChild = NULL;
+    temp->data.Nonterminals.rule = 54;
+    add_child(temp,createTokenEPS(),0,169);
+    return node;
+  }
+  else{
+    token *b = mulExpression(a,temp);
+    token *c = arithmeticExpression2(b,temp);
+    return c;
+  }
+
+}
+
+token *mulExpression(token *node,treeNode *root){ 
+  treeNode *temp = add_child(root,createTokenNtr("mulExpression"),1,55);
+  token *a = integerFactor(node,temp);
+  if(a->id==node->id) return node;
+  token *b = mulExpression2(a,temp);
+  return b;
+}
+
+token *mulExpression2(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("mulExpression2"),1,56);
+  token *a = mulop(node,temp);
+  if(a->id==node->id){
+  	temp->data.Nonterminals.rule = 57;
+    temp->firstChild = NULL;
+    add_child(temp,createTokenEPS(),0,169);
+    return node;
+  }
+  else{
+    token *b = integerFactor(a,temp);
+    if(b->id==a->id) return node;
+    token *c = mulExpression2(b,temp);
+    return c;
+  }
+}
+
+token *sumop(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("SUMOP"),1,60);
+  if(!strcmp(node->tokenName,"PLUS")){
+    add_child(temp,node,0,99);
+    return node->next;
+  }
+  else if(!strcmp(node->tokenName,"MINUS")){
+  	temp->data.Nonterminals.rule = 61;
+    add_child(temp,node,0,99);
+    return node->next;
+  }
+  else{
+    return node;
+  }
+  
+}
+
+token *mulop(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("MULOP"),1,62);
+  if(!strcmp(node->tokenName,"MUL")){
+    add_child(temp,node,0,99);
+    return node->next;
+  }
+  else if(!strcmp(node->tokenName,"DIV")){
+    temp->data.Nonterminals.rule = 63;
+    add_child(temp,node,0,99);
+    return node->next;
+  }
+  else{
+    return node;
+  }
+}
+
+token *integerFactor(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("integerFactor"),1,59);
+  if(!strcmp(node->tokenName,"NUM")){
+    add_child(temp,node,0,99);
+    return node->next;
+  }
+  else{
+  	temp->data.Nonterminals.rule = 58;
+    token *a = varName(node,temp);
+    return a;
+  }
+}
+
+token *booleanExpression(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("booleanExpression"),1,64);
+  token *a = andExpression(node,temp);
+  if(a->id==node->id) return node;
+  token *b = booleanExpression2(a,temp);
+  return b;
+}
+
+token *booleanExpression2(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("booleanExpression2"),1,65);
+  if(!strcmp(node->tokenName,"OROP")){
+    add_child(temp,node,0,99);
+    token *a = andExpression(node->next,temp);
+    if(a->id==node->id) return node;
+    token *b = booleanExpression2(a,temp);
+    return b;
+  }
+  else{
+    temp->firstChild=NULL;
+    temp->data.Nonterminals.rule = 66;
+    add_child(temp,createTokenEPS(),0,169);
+    return node;
+  }
+}
+
+token *andExpression(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("andExpression"),1,67);
+  token *a = varName(node,temp);
+  if(a->id==node->id) return node;
+  token *b = andExpression2(a,temp);
+  return b;
+}
+
+token *andExpression2(token *node,treeNode *root){
+  treeNode *temp = add_child(root,createTokenNtr("andExpression2"),1,68);
+  if(!strcmp(node->tokenName,"ANDOP")){
+    add_child(temp,node,0,169);
+    token *a = varName(node->next,temp);
+    if(a->id==node->id) return node;
+    token *b= andExpression2(a,temp);
+    return b;
+  }
+  else{
+  	temp->data.Nonterminals.rule = 69;
+    temp->firstChild=NULL;
+    add_child(temp,createTokenEPS(),0,169);
+    return node;
+  }
+}
 // ------------------------------------------------------------------------------------------------- FANCY
 
 int ENN=40;
