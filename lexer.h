@@ -25,7 +25,7 @@ void printToken(token *tk);
 void printTokenStream(tokenStream *s);
 void tokeniseSourcecode( char * sourceFileName, tokenStream *s);
 int search(char *value,int tag); // search in the hashTable, value: Hashnode string to be searched, tag: tag of the Hashnode, returns: Hashnode id (-1 if not present in hashTable)
-
+void removeBlankspace(char *);
 
 
 #endif
