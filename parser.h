@@ -156,19 +156,18 @@ token *varName(token *,treeNode *);
 
 
 //sumit
-token *expression(token *,treeNode *);
-token *arithmeticExpression(token *,treeNode *);
-token *arithmeticExpression2(token *,treeNode *);
-token *mulExpression(token *,treeNode *);
-token *mulExpression2(token *,treeNode *);
-token *sumop(token *,treeNode *);
-token *mulop(token *,treeNode *);
-token *integerFactor(token *,treeNode *);
-token *booleanExpression(token *,treeNode *);
-token *booleanExpression2(token *,treeNode *);
-token *andExpression(token *,treeNode *);
-token *andExpression2(token *,treeNode *);
-
+token *expression(token *node,treeNode *root);
+token *arithmeticExpression(token *node,treeNode *root);
+token *arithmeticExpression2(token *node,treeNode *root);
+token *mulExpression(token *node,treeNode *root);
+token *mulExpression2(token *node,treeNode *root);
+token *sumop(token *node,treeNode *root);
+token *mulop(token *node,treeNode *root);
+token *integerFactor(token *node,treeNode *root);
+token *booleanExpression(token *node,treeNode *root);
+token *booleanExpression2(token *node,treeNode *root);
+token *andExpression(token *node,treeNode *root);
+token *andExpression2(token *node,treeNode *root);
 
 //kanav
 token* program(token* node, treeNode* root);
