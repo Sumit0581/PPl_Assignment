@@ -396,6 +396,14 @@ token * getToken(char *word){
      
 }
 
+void removeBlankspace(char * text){
+    int count = 0;
+    for(int i=0;text[i];i++)
+        if(text[i]!=' ' && text[i]!='\t' && text[i]!='\n')
+            text[count++] = text[i];
+    text[count] = '\0';
+}
+
 void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     /*
         tokenises the source code
@@ -419,13 +427,19 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     const char delimiter[2]= " ";
     while(fgets(line,400,src)!=NULL){
         char* word;
+	word = strtok(line,"\n");
         word = strtok(word,delimiter);
+        
         while(word != NULL){
+            
+            /*
             removeBlankspace(word);
             if(strlen(word)==0){
                 word = strtok(NULL,delimiter);
                 continue;
-            }
+            
+        	}
+            */
             token *tk = getToken(word);
             fflush(stdout);
             tk->lineNum = lineNum;
@@ -446,12 +460,5 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     return;
 }
 
-void removeBlankspace(char * text){
-    int count = 0;
-    for(int i=0;text[i];i++)
-        if(text[i]!=' ' && text[i]!='\t' && text[i]!='\n')
-            text[count++] = text[i];
-    text[count] = '\0';
-}
 
 

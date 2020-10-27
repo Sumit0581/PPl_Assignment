@@ -3,9 +3,9 @@
 //#include <stdlib.h>
 #include "interface.h"
 
-char* sourceFileName = "trash2.txt"; //TODO: use "sourcecode.txt"
+char* sourceFileName = "sourcecode.txt";  //"testcases/t1.txt"; //TODO: use "sourcecode.txt"
 char* grammarFile = "grammar.txt";
-int numOfRules = 57;
+int numOfRules = 70;
 int main(int argc, char* argv[]){
 	
 	/*
@@ -30,7 +30,7 @@ options.
 	while(1){
 		
 		printf("\n\n----------------Welcome to the world of PPL Assignment by Group theta-----\n\n");
-		printf("Enter your option 1, 2, 3, or 4\n"); //TODO: print what they do?
+		printf("Enter your option 1(Create Tree), 2(Traverse tree to create TypeExp Table), 3(Print Parse Tree), or 4(Print TypeExp Table)\n"); //TODO: print what they do?
 		scanf("%d", &option);
 
 		if(option==0){
@@ -38,63 +38,84 @@ options.
 			break;	
 		}
 		else if(option==1){
+			printf("\nOption 1: Create Parse tree:\n");
 			lexerPreReq(sourceFileName); /* in lexer.c */ //hashTable available globally 
-			printHashTable();
+			//printHashTable();
 
 			tokenStream *s = (tokenStream *)malloc(sizeof(tokenStream));
 			s->head= NULL;
 			s->len = 0; //len captures the len of source file as # of lexemes
 			tokeniseSourcecode( sourceFileName, s); /* in lexer.c */
-			printTokenStream(s);	
+			
+			// printTokenStream(s);	
+			
+			/*
+			grammar* g = (grammar *)malloc(numOfRules* sizeof(grammar));
+			g = readGrammar(grammarFile, g);	// in grammar.c 
+			printGrammar(g);
+			*/
+			
+			token *h = s->head;
+			
+			token *t = createTokenNtr("Start");
+			treeNode *root = new_node(t,1, -1);
+			
+			token *result = program(h,root);
+			
+			
+			//printParseTree(root);
+			//printParseTreeFancy(root);
+			
+			
+			//printf("OUTSIDE: %s %s\n", result->tokenName, result->lexeme);
+			
+			if(!strcmp(result->tokenName,"EOF"))
+				printf("\nSourceCode is Accepted..!!!\n");
+			else printf("\nSourcecode Rejected..!!!\n");
+
+			//printf("Hello fflush");
+			//fflush(stdout);
+			
+			if(strcmp(result->tokenName,"program")==0) { printf("\n\nThere are some unwanted/unreadable characters in the source code.... \nPARTIAL PARSE TREE CREATED\nTERMINATING\n");}
+			else printf("PARSE TREE SUCCESFULLY CREATED");
+			continue;
+		}
+		else if(option==2){
+			printf("\nOption 2: Traverse the parse tree to construct typeExpressionTable. Also print the type errors whiletraversing the parse tree and accessing the typeExpressionTable\n");
+			
+		
+			continue;		
+		}
+		else if(option==3){
+			printf("\nOption 3: Print Parse Tree in specified format:\n");
+	
+			lexerPreReq(sourceFileName); /* in lexer.c */ //hashTable available globally 
+			//printHashTable();
+			tokenStream *s = (tokenStream *)malloc(sizeof(tokenStream));
+			s->head= NULL;
+			s->len = 0; //len captures the len of source file as # of lexemes
+			tokeniseSourcecode( sourceFileName, s); /* in lexer.c */
+			// printTokenStream(s);	
 			/*
 			grammar* g = (grammar *)malloc(numOfRules* sizeof(grammar));
 			g = readGrammar(grammarFile, g);	// in grammar.c 
 			printGrammar(g);
 			*/
 			token *h = s->head;
-			
-			//for(int i=0; i<(s->len); i++){
-				//fContainer(h, g);
-			//	printToken(h);
-			//	h = h->next;
-			//}
 			token *t = createTokenNtr("Start");
-			treeNode *root = new_node(t,1, 99);
-			
-			//token *result = numberList2(h,root);
-			//token *result = numberList3(h,root);
-			//token *result = numberList4(h,root);
-			//token *result = numberList(h,root);
-			//token *result = jaggedInitialisation(h, root);
-			//token *result = jaggedInitialisation(h,root);
-			//token *result = varType(h,root);
-			//token *result = jaggedInitialisationList(h,root);
-			//token *result = jaggedInitialisationList2(h,root);
-
-			token *result = jaggedDeclaration(h,root);
-			
-			//token *result = program(h, root);
-			
-			if(!strcmp(result->tokenName,"EOF"))
-				printf("\nAccepted..!!!\n");
-			else printf("\nRejected..!!!\n");
-
-			printf("Hello fflush");
-			fflush(stdout);
-			
+			treeNode *root = new_node(t,1, -1);
+			token *result = program(h,root);
+			printParseTreeFancy(root);	//TODO remove this?
 			printParseTree(root);
+			if(!strcmp(result->tokenName,"EOF"))
+				printf("\nSourceCode is Accepted..!!!\n");
+			else printf("\nSourcecode Rejected..!!!\n");
+			if(strcmp(result->tokenName,"program")==0) { printf("\n\nThere are some unwanted/unreadable characters in the source code.... \nPARTIAL PARSE TREE CREATED\nTERMINATING\n");}
 			
-			
-			
-			continue;
-		}
-		else if(option==2){
-			continue;		
-		}
-		else if(option==3){
 			continue;		
 		}
 		else if(option==4){
+			printf("Option 4: Print typeExpressionTable in the specified format: \n");
 			continue;		
 		}
 		else {

@@ -2,8 +2,10 @@
 #define parserh
  
 #include "grammar.h"
-
+#include "stdbool.h"
 #define maxChild 10
+
+//TODO index => index1 in grammar as well
 /*
 typedef struct node{
 	char symbolName[30];
@@ -118,7 +120,7 @@ typedef struct TreeNode{
 // ----------------------------------------------------------------------- end Data structures
 
 void printParseTree(treeNode *);
-//void printParseTreeFancy(treeNode *, int d);	//fancy
+void printParseTreeFancy(treeNode *);	//fancy
 
 // t* add_child(treeNode *, char *data, tag);
 //1. terminals - COLON add_child(,node,, rule) //node->tokenName
@@ -141,33 +143,21 @@ token *varType(token *node, treeNode *root2);
 token *jaggedInitialisationList(token *node, treeNode *root2);
 token *jaggedInitialisationList2(token *node, treeNode *root2);
 
-//rishav
-token *varList(token *,treeNode *);
-token *varList2(token *,treeNode *);
-token *dimensions(token *,treeNode *);
-token *dimensions2(token *,treeNode *);
-token *range(token *,treeNode *);
-token *singleStaticDimension(token *,treeNode *);
-token *index1(token *,treeNode *);
-token *index2(token *,treeNode *);
-token *brackets(token *,treeNode *);
-token *assignment(token *,treeNode *);
-token *varName(token *,treeNode *);
-
 
 //sumit
-token *expression(token *node,treeNode *root);
-token *arithmeticExpression(token *node,treeNode *root);
-token *arithmeticExpression2(token *node,treeNode *root);
-token *mulExpression(token *node,treeNode *root);
-token *mulExpression2(token *node,treeNode *root);
-token *sumop(token *node,treeNode *root);
-token *mulop(token *node,treeNode *root);
-token *integerFactor(token *node,treeNode *root);
-token *booleanExpression(token *node,treeNode *root);
-token *booleanExpression2(token *node,treeNode *root);
-token *andExpression(token *node,treeNode *root);
-token *andExpression2(token *node,treeNode *root);
+token *expression(token *,treeNode *);
+token *arithmeticExpression(token *,treeNode *);
+token *arithmeticExpression2(token *,treeNode *);
+token *mulExpression(token *,treeNode *);
+token *mulExpression2(token *,treeNode *);
+token *sumop(token *,treeNode *);
+token *mulop(token *,treeNode *);
+token *integerFactor(token *,treeNode *);
+token *booleanExpression(token *,treeNode *);
+token *booleanExpression2(token *,treeNode *);
+token *andExpression(token *,treeNode *);
+token *andExpression2(token *,treeNode *);
+
 
 //kanav
 token* program(token* node, treeNode* root);
@@ -179,14 +169,26 @@ token* assignmentList2(token *node, treeNode *root);
 token* varDeclaration(token* node, treeNode* root);
 token* listDeclaration(token* node, treeNode* root);
 token* arrayDeclaration(token* node, treeNode* root);
-token* assignment(token* node, treeNode* root);
-token* varType(token* node, treeNode* root);
-token* varList(token* node, treeNode* root);
-token* dimensions(token* node, treeNode* root);
+//token* assignment(token* node, treeNode* root);
+//token* varType(token* node, treeNode* root);
+//token* varList(token* node, treeNode* root);
+//token* dimensions(token* node, treeNode* root);
 
 
-void fContainer(token *start, grammar *g);
-int f(); //the recursive function
+//rishav
+token * varList(token *,treeNode *);
+token * varList2(token *, treeNode *);
+token * dimensions(token *, treeNode *);
+token * dimensions2(token *, treeNode *);
+token * range(token *, treeNode *);
+token * singleStaticDimension(token *, treeNode *);
+
+token * index1(token *node,treeNode *root);
+token * index2(token *node,treeNode *root);
+token * brackets(token *node,treeNode *root);
+token * assignment(token *node, treeNode *root);
+token * varName(token *node, treeNode *root);
+
 
 
 

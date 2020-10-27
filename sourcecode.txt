@@ -48,9 +48,4 @@ s1 = s2 + s3 * s1 ;
 h1 = h2 + h3 * h1 - h2 * h3 ;
 s1 = s2 + s4 * s6 ;
 q1 = q2 + q3 ;
-abcdefghijklmnopqrstu ;
-1234a ;
-< ;
-hi
-there
 }
