@@ -415,6 +415,7 @@ token *numberList4(token *node, treeNode *root2){
 		return a;
 	}
 	else {
+		root->data.Nonterminals.rule = 27;
 		add_child(root,createTokenEPS(), 0, 169);
 		return node;
 	}

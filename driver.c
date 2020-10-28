@@ -47,7 +47,7 @@ options.
 			s->len = 0; //len captures the len of source file as # of lexemes
 			tokeniseSourcecode( sourceFileName, s); /* in lexer.c */
 			
-			// printTokenStream(s);	
+			printTokenStream(s);	
 			
 			/*
 			grammar* g = (grammar *)malloc(numOfRules* sizeof(grammar));
@@ -63,7 +63,7 @@ options.
 			token *result = program(h,root);
 			
 			
-			//printParseTree(root);
+			printParseTree(root);
 			//printParseTreeFancy(root);
 			
 			
@@ -77,7 +77,12 @@ options.
 			//fflush(stdout);
 			
 			if(strcmp(result->tokenName,"program")==0) { printf("\n\nThere are some unwanted/unreadable characters in the source code.... \nPARTIAL PARSE TREE CREATED\nTERMINATING\n");}
-			else printf("PARSE TREE SUCCESFULLY CREATED");
+			else printf("PARSE TREE SUCCESFULLY CREATED \n");
+			fflush(stdout);
+			typeExpressionTable *T = (typeExpressionTable *)malloc(sizeof(typeExpressionTable));
+			T->next = NULL;
+			traverseParseTree(root,T);
+			printypeExpressionTable(T->next);
 			continue;
 		}
 		else if(option==2){

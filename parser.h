@@ -63,7 +63,7 @@ typedef enum{
 struct RectangularArray{
     ArrayType type;
     int dimensions;
-    int *range[2];
+    char **range[2];
     Datatype basicElementType;
   };
 
@@ -87,8 +87,9 @@ typedef union TypeExpression{
 typedef struct TypeExpressionTable{
   char name[30];
   int type; //0 for primitive, 1 for rec array, 2 for jagged array
-  char *arrayType; //[possible:static,dynamic,not_applicable] not made enum data type cause 'static' is a keyword in C and will cause problem.
+  char arrayType[15]; //[possible:static,dynamic,not_applicable] not made enum data type cause 'static' is a keyword in C and will cause problem.
   typeExpression typexpr;
+  struct TypeExpressionTable *next;
 }typeExpressionTable;
 
 
@@ -190,6 +191,24 @@ token * assignment(token *node, treeNode *root);
 token * varName(token *node, treeNode *root);
 
 
-
-
+void traverseParseTree(treeNode *,typeExpressionTable *);
+typeExpressionTable * resolveDeclaration(treeNode *,typeExpressionTable *);
+void resolveDeclarationList(treeNode *,typeExpressionTable *);
+int resolvejaggedInitialisation2d(treeNode *,int,int);
+void resolveJaggedInitialisationList2d(treeNode *, int *,int ,int,int);
+int *resolvejaggedInitialisation3d(treeNode *,int,int);
+void resolveJaggedInitialisationList3d(treeNode *,int** ,int,int,int);
+int checkNumberList2d(treeNode *,int );
+void dfsNum(treeNode *,int *);
+void dfsNumberList4(treeNode *,int *);
+void dfsNumberList(treeNode *,int *);
+char *getVarName(treeNode *);
+char *getVarType(treeNode *);
+void getVarList(treeNode *,int *,char **,int);
+void getVarCount(treeNode *,int *count);
+void printypeExpressionTable(typeExpressionTable *T);
+typeExpressionTable * next_node(typeExpressionTable *t);
+void getDimensions(treeNode *node, int *dimension);
+void getRange(treeNode *,char ***,int *);
+void printTypeError(int lno, int statementType, char *operator, char *firstOperand, char* firstOperandType,char *secondOperand, char* secondOperandType, int depth, char *message);
 #endif

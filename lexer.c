@@ -427,19 +427,13 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     const char delimiter[2]= " ";
     while(fgets(line,400,src)!=NULL){
         char* word;
-	word = strtok(line,"\n");
-        word = strtok(word,delimiter);
-        
+        word = strtok(line,delimiter);
         while(word != NULL){
-            
-            /*
             removeBlankspace(word);
             if(strlen(word)==0){
                 word = strtok(NULL,delimiter);
                 continue;
-            
         	}
-            */
             token *tk = getToken(word);
             fflush(stdout);
             tk->lineNum = lineNum;
@@ -459,6 +453,5 @@ void tokeniseSourcecode( char * sourceCodeFile, tokenStream *s){
     insertInStream(s,tk);
     return;
 }
-
 
 
