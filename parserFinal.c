@@ -1,13 +1,3 @@
-//group no 34
-/*
-ID:             2017B3A71005P                  Name:              Aniket Upadhyay 
-ID:             2017B3A70305P                  Name:                    Kanav 
-ID:             2017B3A70557P                  Name:               Rishav Mishra
-ID:             2017B4A70581P                  Name:                 Sumit Bisht 
-*/
-
-
-
 #include<ctype.h>
 #include "parser.h"
 
@@ -95,15 +85,11 @@ void printRecur(treeNode *root){
     	typeExpressionTable H;
     	H = temp->data.Nonterminals.typeExp;
     	char *str = printTypeTable2(&H);	//gets type expression in string
-    	//char *grule = printRule(g, temp->data.Nonterminals.rule);
-    	
-    	char *grule2 = "<rule here>";
     	if(str[0]=='\0') str="NO Type Expression";
-    	printf("%25s %10s %21s %6s %-7d %-160s %42s %s\n\n", temp->symbol,"NO","--","--", temp->depth, str," ",grule2 );
+    	printf("%25s %10s %21s %6s %-7d %-160s %42s %s\n\n", temp->symbol,"NO","--","--", temp->depth, str," ","<grammar-rule-incoming>" );
     	//printTypeTable(&H);
     	//printf("\n\n");
-    	//free(grule);
-    	//free(str);
+    	
     }
     depth++;
     printRecur(temp->firstChild);
@@ -113,7 +99,7 @@ void printRecur(treeNode *root){
 }
 void printParseTree(treeNode *root){
 	printf("\n\n-------PRINTING PARSE TREE--------(symbol, depth, tag (0/1))\n\n");
-	printf("%25s %10s %21s %6s %-7s %s %s \n", "SYMBOL_NAME","TERMINAL?","LEXEME_NAME","Lno", "DEPTH","TYPE_EXPRESSION | ","GRAMMAR_RULE" );
+	printf("%15s %10s %25s %3s %5s %30s %35s \n", "SYMBOL_NAME","TERMINAL?","LEXEME_NAME","Lno", "DEPTH","TYPE_EXPRESSION","GRAMMAR_RULE" );
 	printRecur(root);
 	
 	printf("\n\n");
