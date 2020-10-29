@@ -1,11 +1,3 @@
-//group no 34
-/*
-ID:             2017B3A71005P                  Name:              Aniket Upadhyay 
-ID:             2017B3A70305P                  Name:                    Kanav 
-ID:             2017B3A70557P                  Name:               Rishav Mishra
-ID:             2017B4A70581P                  Name:                 Sumit Bisht 
-*/
-
 #include<ctype.h>
 #include "parser.h"
 int c=0;
@@ -355,7 +347,7 @@ typeExpressionTable compatibleTypeBool(typeExpressionTable t1, typeExpressionTab
 	tNIL.typexpr.primDt = NIL;
 
 	//printf("Inside Bool: %s %d %d, %s %d %d\n",t1.name, t1.type, t1.typexpr.primDt, t2.name, t2.type, t2.typexpr.primDt);
-	if( t1.type==0 && t1.typexpr.primDt==Boolean && t2.type==0 && t2.typexpr.primDt==Boolean) { strcpy(t1.name, ""); return t1; }
+	if( t1.type==0 && t1.typexpr.primDt==Boolean && t2.type==0 && t2.typexpr.primDt==Boolean) { return t1; }
 	else if( t1.type==0 && t1.typexpr.primDt==NIL && t2.type==0 && t2.typexpr.primDt==Boolean) {
 		//nil OP bool
 		return t2;
@@ -369,7 +361,10 @@ typeExpressionTable compatibleTypeBool(typeExpressionTable t1, typeExpressionTab
 		strcpy(t1.name, "tNIL");
 		return t1;
 	}
-	else return tError;
+	else{
+
+		return tError;
+	}
 
 }
 
@@ -390,13 +385,13 @@ typeExpressionTable compatibleTypeArith(typeExpressionTable t1, typeExpressionTa
 	if( (t1.type==0 && t1.typexpr.primDt==Boolean) || ( t2.type==0 && t2.typexpr.primDt==Boolean) )return tError;
 	
 	
-	if(t1.type==0 && t1.typexpr.primDt==NIL) {strcpy(t2.name, ""); return t2;}
-	if(t2.type==0 && t2.typexpr.primDt==NIL) {strcpy(t1.name, ""); return t1;}
+	if(t1.type==0 && t1.typexpr.primDt==NIL) { return t2;}
+	if(t2.type==0 && t2.typexpr.primDt==NIL) { return t1;}
 		
 	if(t1.type!=t2.type) {return tError;}	//TODO upadte if we can add a jagged array and rect array of same size 
 	else if(t1.type == 0){
 	
-		if(t1.typexpr.primDt == t2.typexpr.primDt) {strcpy(t1.name, ""); return t1;}
+		if(t1.typexpr.primDt == t2.typexpr.primDt) { return t1;}
 		else return tError;
 	}
 	else if(t1.type == 1){ // rect array
@@ -410,7 +405,7 @@ typeExpressionTable compatibleTypeArith(typeExpressionTable t1, typeExpressionTa
 				if(strcmp(t1.typexpr.rectangularArray.range[1][i], t2.typexpr.rectangularArray.range[1][i])!=0) return tError;
 
 			}
-			strcpy(t1.name, ""); return t1;
+			 return t1;
 		}
 		else return tError;
 	
@@ -430,7 +425,7 @@ typeExpressionTable compatibleTypeArith(typeExpressionTable t1, typeExpressionTa
 				for(int i=0; i<(t1.typexpr.jaggedArray.range_R1[1]-t1.typexpr.jaggedArray.range_R1[0]+1); i++){
 					if(t1.typexpr.jaggedArray.R2.two_Dim[i] != t2.typexpr.jaggedArray.R2.two_Dim[i]) return tError;
 				}
-				strcpy(t1.name, ""); return t1;
+				return t1;
 			}
 			
 			else if(t1.typexpr.jaggedArray.dimensions ==3){
@@ -445,7 +440,7 @@ typeExpressionTable compatibleTypeArith(typeExpressionTable t1, typeExpressionTa
 					}
 					else return tError;
 				}
-				strcpy(t1.name, ""); return t1;
+				 return t1;
 			}
 		
 		}
@@ -522,7 +517,7 @@ typeExpressionTable divCompatibleTypeArith(typeExpressionTable t1, typeExpressio
 				for(int i=0; i<t1diff; i++){
 					if(t1.typexpr.jaggedArray.R2.two_Dim[i] != t2.typexpr.jaggedArray.R2.two_Dim[i]) return tError;
 				}
-				strcpy(t1.name, ""); return t1;
+				return t1;
 			}
 			
 			else if(t1.typexpr.jaggedArray.dimensions ==3){
@@ -1298,12 +1293,11 @@ void printTypeError(int lno, int statementType, char *operator, char *firstOpera
 // ------------------------------------------------------------------------- KANAVTYPE
 
 typeExpressionTable checkArithmeticExpression(treeNode *node,typeExpressionTable *T){
-  treeNode* tempNode = node->firstChild;  // tempNode points to <mulExpression>
+  treeNode* tempNode = node->firstChild; // tempNode points to <mulExpression>
   treeNode* tempNode2;
   typeExpressionTable a, c;
 
   a = checkmulExpression(tempNode, T);
-  
   tempNode2 = tempNode;  // tempNode2 points to <mulExpression>
   tempNode = tempNode->nextSibling;  // tempNode points to <arithmeticExpression2>
   c = checkArithmeticExpression2(tempNode, T);
@@ -1311,26 +1305,40 @@ typeExpressionTable checkArithmeticExpression(treeNode *node,typeExpressionTable
     node->data.Nonterminals.typeExp = a;
     return a;
   }
-
   node->data.Nonterminals.typeExp = compatibleTypeArith(a, c);
 
   if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-      printTypeErrorKanav(tempNode);
+  	char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode->firstChild->firstChild->data.Terminals.lno, 1,tempNode->firstChild->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->firstChild->depth, "Operand compatibility error");
       firstError = 1;  // make firstError = 0 when it returns back to assignment.
   }
 
   return node->data.Nonterminals.typeExp;
 }
 
+void getName(typeExpressionTable exp,char *name){
+	if(exp.type == 0){
+		if(exp.typexpr.primDt == 0) strcpy(name,"integer");
+		else if(exp.typexpr.primDt == 1) strcpy(name,"real");
+		else if(exp.typexpr.primDt == 2) strcpy(name,"boolean");
+	}
+	else if(exp.type==1){
+		strcpy(name,"rectangularArray:integer");
+	}
+	else if(exp.type == 2){
+		strcpy(name,"jaggedArray:integer");
+	}
+}
 
 typeExpressionTable checkArithmeticExpression2(treeNode *node, typeExpressionTable *T){
   treeNode* tempNode = node->firstChild;
   treeNode* tempNode2;
   treeNode* tempNode3;
   typeExpressionTable a, c;
-  
-  node->firstChild->data.Nonterminals.typeExp = nilTable();
-  
+
   if(!strcmp(tempNode->symbol, "EPS")){
     node->data.Nonterminals.typeExp.type = 0;
     node->data.Nonterminals.typeExp.typexpr.primDt = 4;
@@ -1352,8 +1360,12 @@ typeExpressionTable checkArithmeticExpression2(treeNode *node, typeExpressionTab
     node->data.Nonterminals.typeExp = compatibleTypeArith(a, c);
 
     if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-        printTypeErrorKanav(tempNode);
-        firstError = 1;  // make firstError = 0 when it returns back to assignment.
+        char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode2->firstChild->data.Terminals.lno, 1,tempNode2->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->depth, "Operand compatibility error");
+      firstError = 1;  // make firstError = 0 when it returns back to assignment.
     }
     return node->data.Nonterminals.typeExp;
   }
@@ -1374,11 +1386,14 @@ typeExpressionTable checkmulExpression(treeNode *node,typeExpressionTable *T){
       node->data.Nonterminals.typeExp = a;
       return a;
     }
-
-    node->data.Nonterminals.typeExp = compatibleTypeArith(a, c);
-
+    if(!strcmp(tempNode->firstChild->firstChild->symbol, "MUL"))      node->data.Nonterminals.typeExp = compatibleTypeArith(a, c);
+      else    node->data.Nonterminals.typeExp = divCompatibleTypeArith(a, c);
     if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-        printTypeErrorKanav(tempNode);
+        char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode->firstChild->firstChild->data.Terminals.lno, 1,tempNode->firstChild->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->firstChild->depth, "Operand compatibility error");
         firstError = 1;  // make firstError = 0 when it returns back to assignment.
     }
     return node->data.Nonterminals.typeExp;
@@ -1390,7 +1405,7 @@ typeExpressionTable checkmulExpression2(treeNode *node, typeExpressionTable *T){
     treeNode* tempNode2;
     treeNode* tempNode3;
     typeExpressionTable a, c;
-	node->firstChild->data.Nonterminals.typeExp = nilTable();
+
     if(!strcmp(tempNode->symbol, "EPS")){
       node->data.Nonterminals.typeExp.type = 0;
       node->data.Nonterminals.typeExp.typexpr.primDt = 4;
@@ -1413,7 +1428,12 @@ typeExpressionTable checkmulExpression2(treeNode *node, typeExpressionTable *T){
       else    node->data.Nonterminals.typeExp = divCompatibleTypeArith(a, c);
 
       if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-          printTypeErrorKanav(tempNode);
+          char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode2->firstChild->data.Terminals.lno, 1,tempNode2->firstChild->symbol, a.name, type1, c.name,type2, tempNode2->firstChild->depth, "Operand compatibility error");
+
           firstError = 1;  // make firstError = 0 when it returns back to assignment.
       }
       return node->data.Nonterminals.typeExp;
@@ -1428,12 +1448,11 @@ typeExpressionTable checkIntegerFactor(treeNode *node,typeExpressionTable *T){
   }
   else a = checkVarName(node->firstChild,T); // sending <varName>
   node->data.Nonterminals.typeExp = a;
-  printf("\nINside varname%s %d \n",node->data.Nonterminals.typeExp.name, node->data.Nonterminals.typeExp.type);
-  printf("\nINside varname%s %d \n",a.name, a.type);
+  // printf("\nINside varname%s %d \n",node->data.Nonterminals.typeExp.name, node->data.Nonterminals.typeExp.type);
+  // printf("\nINside varname%s %d \n",a.name, a.type);
 
   return a;
 }
-
 
 typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
   
@@ -1446,7 +1465,7 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	typeExpressionTable tInteger;
 	tInteger.type = 0;
 	strcpy(tInteger.arrayType,"not_applicable");
-	strcpy(tInteger.name, "integer");
+	strcpy(tInteger.name, "arrayElement");
 	tInteger.typexpr.primDt = integer;
 	
 	typeExpressionTable a;
@@ -1479,7 +1498,8 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  					//printf(" %d,%d ",i,arr[i]);
 	  					if(arr[i]<atoi(a.typexpr.rectangularArray.range[0][i]) || arr[i]>atoi(a.typexpr.rectangularArray.range[1][i])){
 	  						// out of bounds error
-	  						printf("\n Rectangular Array out of bounds\n");	//TODO printError
+	  						// printf("\n Rectangular Array out of bounds\n");	//TODO printError
+	  						printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "rectangularArray","***", "***", tempNode->depth, " Rectangular Array out of bounds");
 	  						//printTypeError(node.);
 	  						node->data.Nonterminals.typeExp = tError;
 	  						return tError;
@@ -1494,6 +1514,7 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  		}
 	  		else {
 	  			node->data.Nonterminals.typeExp = tError;
+	  			printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "rectangularArray","***", "***", tempNode->depth, "Rectangular Array dimensions not declared");
 	  			return tError;	//less or more dimnesions
 	  		}
 	  	
@@ -1512,8 +1533,9 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  							
 	  				if(dimensions ==2){
 	  						if(arr[0]<a.typexpr.jaggedArray.range_R1[0] || arr[0]>a.typexpr.jaggedArray.range_R1[1]) {
-	  							printf("\n Jagged Array out of bounds\n");	//TODO printError
+	  							// printf("\n Jagged Array out of bounds\n");	//TODO printError
 	  							node->data.Nonterminals.typeExp = tError;
+	  							printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA out of bounds: index 1");
 	  							return tError;
 	  							// jagged array 1st index out of bounds
 	  						}
@@ -1524,8 +1546,9 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  						
 	  						if(arr[1]>=a.typexpr.jaggedArray.R2.two_Dim[d]) {
 	  							// copy above's
-	  							printf("\n Jagged Array out of bounds\n");	//TODO printError
+	  							// printf("\n Jagged Array out of bounds\n");	//TODO printError
 	  							// jagged array 2nd index out of bounds
+	  							printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA out of bounds: index 2");
 	  							node->data.Nonterminals.typeExp = tError;
 	  							return tError;
 	  						}
@@ -1535,7 +1558,7 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  				else if(dimensions ==3){
 	  						// arr [0 1 2]
 	  						if(arr[0]<a.typexpr.jaggedArray.range_R1[0] || arr[0]>a.typexpr.jaggedArray.range_R1[1]) {
-	  							printf("\n Jagged Array out of bounds\n");	//TODO printError
+	  							printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA out of bounds: index 1");	//TODO printError
 	  							node->data.Nonterminals.typeExp = tError;
 	  							return tError;
 	  							// jagged array 1st index out of bounds
@@ -1545,7 +1568,7 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  						
 	  						if(arr[1]>= a.typexpr.jaggedArray.R2.three_Dim[d][0] ) {
 	  							// copy above's
-	  							printf("\n Jagged Array out of bounds\n");	//TODO printError
+	  							printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA out of bounds: index 2");	//TODO printError
 	  							// jagged array 2nd index out of bounds
 	  							node->data.Nonterminals.typeExp = tError;
 	  							return tError;
@@ -1554,7 +1577,8 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  						int e = arr[1];
 	  						if(arr[2]>=a.typexpr.jaggedArray.R2.three_Dim[d][e+1] ) {
 	  							// copy above's
-	  							printf("\n Jagged Array out of bounds\n");	//TODO printError
+	  							// printf("\n Jagged Array out of bounds\n");
+	  							printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA out of bounds: index 3");	//TODO printError
 	  							// jagged array 3rd index out of bounds
 	  							node->data.Nonterminals.typeExp = tError;
 	  							return tError;
@@ -1570,7 +1594,7 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  		}
 	  			//TODO printError
 	  		else{
-	  			printf("\n Jagged Array more/less dimesnions\n");
+	  			printTypeError(node->firstChild->data.Terminals.lno, 1, "***", node->firstChild->data.Terminals.lexeme, "jaggedArray","***", "***", tempNode->depth, "JA dimensions not declared");
 	  			node->data.Nonterminals.typeExp = tError;
 	  		 return tError; //less or more dimnesions
 	  		}
@@ -1585,6 +1609,8 @@ typeExpressionTable checkVarName(treeNode *node,typeExpressionTable *T){
 	  	return a;
 	}
 }
+
+
 
 void getVarsAndNums(treeNode *node,int *countNum, int *countID){
 	treeNode *temp = node;
@@ -1617,12 +1643,6 @@ void getNumValues(int *arr, treeNode *node, int *i){
 typeExpressionTable getVariableTypeExpression(char *name, typeExpressionTable *T){
   	//for(int i=0; i<c && T!=NULL; i++){
   	
-  	typeExpressionTable tNIL;
-	tNIL.type = 0;
-	strcpy(tNIL.arrayType,"not_applicable");
-	strcpy(tNIL.name,"NIL");
-	tNIL.typexpr.primDt = 4;
-  	
   	while(T!=NULL)	
   	{	
  		if(!strcmp((*T).name,name)){
@@ -1630,7 +1650,7 @@ typeExpressionTable getVariableTypeExpression(char *name, typeExpressionTable *T
  		}
  		T = T->next;
  	}
- 	return tNIL;
+ 	return nilTable();
 }
 
 
@@ -1671,7 +1691,7 @@ typeExpressionTable checkAssignment(treeNode *node, typeExpressionTable *T){
   treeNode* tempNode2;
   typeExpressionTable a, c;
   a = checkVarName(tempNode, T);
-
+  firstError=0;
   tempNode2 = tempNode;  // tempNode2 points to <varName>
   tempNode = tempNode->nextSibling;  // tempNode points to <EQU>
   tempNode = tempNode->nextSibling;  // tempNode points to <expression>
@@ -1681,7 +1701,11 @@ typeExpressionTable checkAssignment(treeNode *node, typeExpressionTable *T){
   else node->data.Nonterminals.typeExp = compatibleTypeBool(a, c);
 
   if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-      printTypeErrorKanav(tempNode);
+    char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode2->firstChild->data.Terminals.lno, 1,tempNode2->nextSibling->symbol, a.name, type1, c.name,type2, tempNode2->nextSibling->depth, "Assignment compatibility error");
       firstError = 1;  // make firstError = 0 when it returns back to assignment.
   }
   return node->data.Nonterminals.typeExp;
@@ -1692,16 +1716,16 @@ typeExpressionTable checkExpression(treeNode *node,typeExpressionTable *T){
   treeNode* tempNode = node->firstChild;   // tempNode points to <arithmeticExpression> or <booleanExpression>
   treeNode* tempNode2;
   typeExpressionTable a, c;
-  firstError = 0;
+  
   if(!strcmp(tempNode->symbol, "arithmeticExpression")){
     node->data.Nonterminals.typeExp = checkArithmeticExpression(tempNode, T);
-    printf("\n\nPrinting type EXPR: %s %d\n\n",node->data.Nonterminals.typeExp.name, node->data.Nonterminals.typeExp.typexpr.primDt);
-    firstError = 0;
+    // printf("\n\nPrinting type EXPR: %s %d\n\n",node->data.Nonterminals.typeExp.name, node->data.Nonterminals.typeExp.typexpr.primDt);
+    // firstError = 0;
     return node->data.Nonterminals.typeExp;
   }
   else if(!strcmp(tempNode->symbol, "booleanExpression")){
     node->data.Nonterminals.typeExp = checkBooleanExpression(tempNode, T);
-    firstError = 0;
+    // firstError = 0;
     return node->data.Nonterminals.typeExp;
   }
   else{
@@ -1715,7 +1739,7 @@ typeExpressionTable checkBooleanExpression(treeNode *node,typeExpressionTable *T
   treeNode* tempNode = node->firstChild;  // tempNode points to <andExpression>
   treeNode* tempNode2;
   typeExpressionTable a, c;
-
+  
   a = checkAndExpression(tempNode, T);
 
   tempNode2 = tempNode;  // tempNode2 points to <andExpression>
@@ -1729,7 +1753,11 @@ typeExpressionTable checkBooleanExpression(treeNode *node,typeExpressionTable *T
   node->data.Nonterminals.typeExp = compatibleTypeBool(a, c);
 
   if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-      printTypeErrorKanav(tempNode);
+    char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode->firstChild->data.Terminals.lno, 1,tempNode->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->depth, "Operand compatibility error");
       firstError = 1;  // make firstError = 0 when it returns back to assignment.
   }
   return node->data.Nonterminals.typeExp;
@@ -1763,7 +1791,11 @@ typeExpressionTable checkBooleanExpression2(treeNode *node, typeExpressionTable 
     node->data.Nonterminals.typeExp = compatibleTypeBool(a, c);
 
     if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-        printTypeErrorKanav(tempNode);
+         char *type1 = (char *)malloc(30*sizeof(char));
+  	char *type2 = (char *)malloc(30*sizeof(char));
+  	getName(a,type1);
+  	getName(c,type2);
+      printTypeError(tempNode->firstChild->data.Terminals.lno, 1,tempNode->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->depth, "Operand compatibility error");
         firstError = 1;  // make firstError = 0 when it returns back to assignment.
     }
     return node->data.Nonterminals.typeExp;
@@ -1789,7 +1821,11 @@ typeExpressionTable checkAndExpression(treeNode *node,typeExpressionTable *T){
   node->data.Nonterminals.typeExp = compatibleTypeBool(a, c);
 
   if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-      printTypeErrorKanav(tempNode);
+        char *type1 = (char *)malloc(30*sizeof(char));
+      	char *type2 = (char *)malloc(30*sizeof(char));
+      	getName(a,type1);
+      	getName(c,type2);
+          printTypeError(tempNode->firstChild->data.Terminals.lno, 1,tempNode->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->depth, "Operand compatibility error");
       firstError = 1;  // make firstError = 0 when it returns back to assignment.
   }
   return node->data.Nonterminals.typeExp;
@@ -1823,7 +1859,11 @@ typeExpressionTable checkAndExpression2(treeNode *node, typeExpressionTable *T){
     node->data.Nonterminals.typeExp = compatibleTypeBool(a, c);
 
     if(node->data.Nonterminals.typeExp.type == 0 && node->data.Nonterminals.typeExp.typexpr.primDt == ERROR && firstError == 0){
-        printTypeErrorKanav(tempNode);
+          char *type1 = (char *)malloc(30*sizeof(char));
+        	char *type2 = (char *)malloc(30*sizeof(char));
+        	getName(a,type1);
+        	getName(c,type2);
+            printTypeError(tempNode->firstChild->data.Terminals.lno, 1,tempNode->firstChild->symbol, a.name, type1, c.name,type2, tempNode->firstChild->depth, "Operand compatibility error");
         firstError = 1;  // make firstError = 0 when it returns back to assignment.
     }
     return node->data.Nonterminals.typeExp;
